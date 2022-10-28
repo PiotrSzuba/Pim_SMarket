@@ -11,8 +11,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Slave market',
       theme: ThemeData(
-          primaryColor: CustomTheme.mainPink,
-          primarySwatch: CustomTheme.mainPink),
+          primaryColor: CustomTheme.pinkMaterial,
+          primarySwatch: CustomTheme.pinkMaterial,
+          scaffoldBackgroundColor: Colors.black87),
       home: const MyHomePage(title: 'Slave market'),
     );
   }
@@ -29,8 +30,8 @@ class MyHomePage extends StatefulWidget {
 
 class _BottomNavigator extends State<MyHomePage> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const TextStyle optionStyle = TextStyle(
+      fontSize: 30, fontWeight: FontWeight.bold, color: CustomTheme.pinkColor);
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
       'Home page',
@@ -60,7 +61,7 @@ class _BottomNavigator extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title, style: const TextStyle(color: Colors.black)),
+        title: Text(widget.title, style: CustomTheme.blackText),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -70,21 +71,21 @@ class _BottomNavigator extends State<MyHomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
-              backgroundColor: CustomTheme.mainPink),
+              backgroundColor: CustomTheme.pinkMaterial),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
-            backgroundColor: CustomTheme.mainPink,
+            backgroundColor: CustomTheme.pinkMaterial,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),
             label: 'New',
-            backgroundColor: CustomTheme.mainPink,
+            backgroundColor: CustomTheme.pinkMaterial,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
-            backgroundColor: CustomTheme.mainPink,
+            backgroundColor: CustomTheme.pinkMaterial,
           ),
         ],
         currentIndex: _selectedIndex,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomTheme {
-  static const MaterialColor mainPink = MaterialColor(
+  static const Color pinkColor = Color(0xFFAB41F1);
+
+  static const MaterialColor pinkMaterial = MaterialColor(
     0xFFAB41F1,
     <int, Color>{
       50: Color(0xFFFBF6FF),
@@ -16,4 +18,7 @@ class CustomTheme {
       900: Color(0xFF321346),
     },
   );
+
+  static const TextStyle blackText = TextStyle(color: Colors.black);
+  static const TextStyle pinkText = TextStyle(color: pinkColor);
 }
