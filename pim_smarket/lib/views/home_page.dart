@@ -10,12 +10,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePage();
 }
 
+//"student ${index + 1} clicked"
 class _HomePage extends State<HomePage> {
   List<Widget> items = List<Widget>.generate(
       30,
       (index) => InfoCard(
-            studentName: "student $index",
+            studentName: "student ${index + 1}",
             tags: "C C++ C# F# Java Python Lisp Javascript Typescript Dart",
+            onPressed: () => print("student ${index + 1} clicked"),
           ));
 
   @override

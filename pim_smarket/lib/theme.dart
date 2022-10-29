@@ -17,6 +17,7 @@ class CustomTheme {
   static const TextStyle pinkTitle =
       TextStyle(color: pinkColor, fontWeight: FontWeight.bold, fontSize: 20);
   static const Color backgroundColor = Colors.black26;
+  static const Color elementFillColor = Colors.black;
 
   static const BorderRadius circularBorder =
       BorderRadius.all(Radius.circular(_borderRadius));
