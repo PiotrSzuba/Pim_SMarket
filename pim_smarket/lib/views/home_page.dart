@@ -13,9 +13,9 @@ class HomePage extends StatefulWidget {
 //"student ${index + 1} clicked"
 class _HomePage extends State<HomePage> {
   List<Widget> items = List<Widget>.generate(
-      30,
+      20,
       (index) => InfoCard(
-            studentName: "student ${index + 1}",
+            name: "student ${index + 1}",
             tags: "C C++ C# F# Java Python Lisp Javascript Typescript Dart",
             onPressed: () => print("student ${index + 1} clicked"),
           ));

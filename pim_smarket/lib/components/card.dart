@@ -4,12 +4,12 @@ import 'package:pim_smarket/theme.dart';
 class InfoCard extends StatelessWidget {
   const InfoCard(
       {super.key,
-      required this.studentName,
+      required this.name,
       required this.tags,
       required this.onPressed,
       this.imageUrl});
 
-  final String studentName;
+  final String name;
   final String tags;
   final Function onPressed;
   final String? imageUrl;
@@ -53,7 +53,7 @@ class InfoCard extends StatelessWidget {
                     child: Column(
                   children: [
                     Text(
-                      studentName,
+                      name,
                       style: CustomTheme.pinkTitle,
                     ),
                     const SizedBox(height: 20),
