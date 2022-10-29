@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pim_smarket/components/components.dart';
+import 'package:pim_smarket/theme.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key, required this.title});
@@ -12,12 +14,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPage extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: Text(
-        widget.title,
-        textAlign: TextAlign.center,
-      )),
-    );
+    return PageTemplate.build(Text(widget.title,
+        textAlign: TextAlign.center, style: CustomTheme.pinkText));
   }
 }
