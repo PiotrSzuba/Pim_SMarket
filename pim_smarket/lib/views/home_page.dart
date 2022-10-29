@@ -37,7 +37,10 @@ class _HomePage extends State<HomePage> {
         value: _value,
         onChange: onChange,
       ),
-      Button(title: 'Home button', onClicked: onClick),
+      Container(
+        margin: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Button(title: 'Home button', onClicked: onClick),
+      ),
       SizedBox(
         width: 100,
         child: Button(
