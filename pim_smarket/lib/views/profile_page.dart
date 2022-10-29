@@ -14,7 +14,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePage extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return PageTemplate.build(Text(widget.title,
-        textAlign: TextAlign.center, style: CustomTheme.pinkText));
+    return PageTemplate(
+        child: Text(widget.title,
+            textAlign: TextAlign.center, style: CustomTheme.pinkText));
   }
 }

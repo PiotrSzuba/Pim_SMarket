@@ -2,22 +2,32 @@ import 'package:flutter/material.dart';
 import "./extensions/extensions.dart";
 
 class CustomTheme {
+  static const double _borderRadius = 10.0;
   static const int _red = 171;
   static const int _green = 65;
   static const int _blue = 241;
+  static const Color pinkColor = Color.fromARGB(255, _red, _green, _blue);
+  static const Color pinkColor50 = Color.fromARGB(125, _red, _green, _blue);
+  static const double bodyMarginX = 0.05;
+  static const double bodyMarginY = 0.05;
 
-  static const Color _pinkColor = Color.fromARGB(255, _red, _green, _blue);
+  static const TextStyle blackText = TextStyle(color: Colors.black);
+  static const TextStyle pinkText = TextStyle(color: pinkColor);
+  static const TextStyle pinkText50 = TextStyle(color: pinkColor50);
+  static const TextStyle pinkTitle =
+      TextStyle(color: pinkColor, fontWeight: FontWeight.bold, fontSize: 20);
+  static const Color backgroundColor = Colors.black26;
+
+  static const BorderRadius circularBorder =
+      BorderRadius.all(Radius.circular(_borderRadius));
+
   static final int _pinkColorValue =
-      int.parse("0x${_pinkColor.toHex(leadingHashSign: false)}");
+      int.parse("0x${pinkColor.toHex(leadingHashSign: false)}");
 
   static MaterialColor pinkMaterial = MaterialColor(
     _pinkColorValue,
     _getSwat(_red, _green, _blue),
   );
-
-  static const TextStyle blackText = TextStyle(color: Colors.black);
-  static const TextStyle pinkText = TextStyle(color: _pinkColor);
-  static const Color backgroundColor = Colors.black54;
 
   static Map<int, Color> _getSwat(int red, int green, int blue) {
     return <int, Color>{

@@ -14,7 +14,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPage extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return PageTemplate.build(Text(widget.title,
-        textAlign: TextAlign.center, style: CustomTheme.pinkText));
+    return PageTemplate(
+        child: Text(widget.title,
+            textAlign: TextAlign.center, style: CustomTheme.pinkText));
   }
 }
