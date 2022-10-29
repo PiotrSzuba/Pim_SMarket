@@ -12,42 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
-  String _value = "";
-  void onChange(String value) {
-    setState(() {
-      _value = value;
-    });
-  }
-
-  void onClick() {
-    print("essa");
-  }
-
   @override
   Widget build(BuildContext context) {
-    return PageTemplate(
-        child: Column(children: [
-      const Text(
-        "Most recent",
-        style: CustomTheme.pinkTitle,
-      ),
-      TextInput(
-        placeholder: "Enter your name",
-        title: "Name",
-        value: _value,
-        onChange: onChange,
-      ),
-      Container(
-        margin: const EdgeInsets.symmetric(vertical: 10.0),
-        child: Button(title: 'Home button', onClicked: onClick),
-      ),
-      SizedBox(
-        width: 100,
-        child: Button(
-          title: "small",
-          onClicked: () {},
-        ),
-      )
-    ]));
+    return PageTemplate(child: Column(children: const []));
   }
 }
