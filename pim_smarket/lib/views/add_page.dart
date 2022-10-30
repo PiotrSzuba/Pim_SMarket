@@ -72,7 +72,7 @@ class _AddPage extends State<AddPage> {
                 builder: ((context, userContext, child) => Column(
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(bottom: 10),
+                          margin: const EdgeInsets.symmetric(vertical: 10),
                           child:
                               const Text("Tags", style: CustomTheme.pinkTitle),
                         ),
