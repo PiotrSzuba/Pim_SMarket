@@ -9,6 +9,7 @@ class TextInput extends StatelessWidget {
     required this.placeholder,
     required this.onChange,
     this.asteriskText,
+    this.isError,
   });
 
   final String label;
@@ -16,29 +17,40 @@ class TextInput extends StatelessWidget {
   final String value;
   final Function onChange;
   final bool? asteriskText;
+  final bool? isError;
+
+  Color _getBorderColor() {
+    if (isError == null) return CustomTheme.pinkColor;
+    return isError! ? CustomTheme.errorColor : CustomTheme.pinkColor;
+  }
+
+  TextStyle _getTextStyle() {
+    if (isError == null) return CustomTheme.pinkText;
+    return isError! ? CustomTheme.errorText : CustomTheme.pinkText;
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(width: 1, color: CustomTheme.pinkColor),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 1, color: _getBorderColor()),
               borderRadius: CustomTheme.circularBorder),
           labelText: label,
-          labelStyle: CustomTheme.pinkText,
+          labelStyle: _getTextStyle(),
           hintText: placeholder,
           hintStyle: CustomTheme.pinkText50,
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(width: 1, color: CustomTheme.pinkColor),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 1, color: _getBorderColor()),
               borderRadius: CustomTheme.circularBorder),
           contentPadding: const EdgeInsets.all(8),
           floatingLabelBehavior: FloatingLabelBehavior.auto,
-          floatingLabelStyle: CustomTheme.pinkText,
+          floatingLabelStyle: _getTextStyle(),
           filled: true,
           fillColor: Colors.black),
       obscureText: asteriskText ?? false,
       obscuringCharacter: '*',
-      style: const TextStyle(color: CustomTheme.pinkColor),
+      style: _getTextStyle(),
       onChanged: (value) => onChange(value),
     );
   }

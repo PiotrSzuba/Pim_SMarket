@@ -16,7 +16,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   String _email = "";
+  bool _emailError = false;
   String _password = "";
+  bool _passwordError = false;
   String _name = "";
   bool _isSigningIn = true;
 
@@ -32,15 +34,29 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
+  void onSignUp(UserContext userContext) {}
+
   void onChangeEmail(String email) {
     setState(() {
       _email = email;
+      if (email == "student" || email == "company") {
+        _emailError = false;
+      } else {
+        _emailError = true;
+      }
+      if (email.isEmpty) _emailError = false;
     });
   }
 
   void onChangePassword(String password) {
     setState(() {
       _password = password;
+      if (password == "1234") {
+        _passwordError = false;
+      } else {
+        _passwordError = true;
+      }
+      if (password.isEmpty) _passwordError = false;
     });
   }
 
@@ -89,6 +105,7 @@ class _LoginPage extends State<LoginPage> {
                           value: _email,
                           onChange: onChangeEmail,
                           placeholder: "Email",
+                          isError: _emailError,
                         )),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 5.0),
@@ -98,13 +115,16 @@ class _LoginPage extends State<LoginPage> {
                         onChange: onChangePassword,
                         placeholder: "password",
                         asteriskText: true,
+                        isError: _passwordError,
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Button(
                         title: _isSigningIn ? "Sign in" : "Sign up",
-                        onClicked: () => onSignIn(userContext),
+                        onClicked: _isSigningIn
+                            ? () => onSignIn(userContext)
+                            : () => onSignUp(userContext),
                       ),
                     ),
                     Row(

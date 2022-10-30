@@ -10,15 +10,23 @@ class CustomTheme {
   static const Color pinkColor50 = Color.fromARGB(125, _red, _green, _blue);
   static const double bodyMarginX = 0.05;
   static const double bodyMarginY = 0.05;
-  static const String appName = "Slave market";
+  static const String appName = "Student market";
+  static const String appLogo = "";
+  static const double _titleFontSize = 20;
 
   static const TextStyle blackText = TextStyle(color: Colors.black);
+  static const TextStyle blackTitle = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontSize: _titleFontSize);
   static const TextStyle pinkText = TextStyle(color: pinkColor);
   static const TextStyle pinkText50 = TextStyle(color: pinkColor50);
-  static const TextStyle pinkTitle =
-      TextStyle(color: pinkColor, fontWeight: FontWeight.bold, fontSize: 20);
-  static const Color backgroundColor = Colors.black26;
+  static const TextStyle pinkTitle = TextStyle(
+      color: pinkColor, fontWeight: FontWeight.bold, fontSize: _titleFontSize);
+  static const Color backgroundColor = Colors.black45;
   static const Color elementFillColor = Colors.black;
+  static const Color errorColor = Color.fromARGB(255, 222, 33, 55);
+  static const TextStyle errorText = TextStyle(color: errorColor);
 
   static const BorderRadius circularBorder =
       BorderRadius.all(Radius.circular(_borderRadius));

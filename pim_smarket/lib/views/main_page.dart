@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pim_smarket/data/data.dart';
 import 'package:pim_smarket/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import "views.dart";
 
 class MainPage extends StatefulWidget {
@@ -13,20 +14,20 @@ class MainPage extends StatefulWidget {
 
 class _BottomNavigator extends State<MainPage> {
   static const List<String> _options = <String>[
-    "Home",
+    CustomTheme.appName,
     "Search",
     "Add",
     "Profile"
   ];
 
   static const List<String> _optionsNoAdd = <String>[
-    "Home",
+    CustomTheme.appName,
     "Search",
     "Profile"
   ];
 
   int _selectedIndex = 0;
-  String _title = _options[0];
+  String _title = CustomTheme.appName;
 
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(title: _options[0]),
@@ -101,7 +102,10 @@ class _BottomNavigator extends State<MainPage> {
     return Consumer<UserContext>(
         builder: (context, userContext, child) => Scaffold(
               appBar: AppBar(
-                title: Text(_title, style: CustomTheme.blackText),
+                title: Text(_title,
+                    style: GoogleFonts.orbitron(
+                        //gugi // orbitron // germania one
+                        textStyle: CustomTheme.blackTitle)),
               ),
               body: Center(
                 child: resolveUserStatus(userContext),
