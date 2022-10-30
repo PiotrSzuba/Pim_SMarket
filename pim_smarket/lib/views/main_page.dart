@@ -26,7 +26,7 @@ class _BottomNavigator extends State<MainPage> {
     "Profile"
   ];
 
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   String _title = CustomTheme.appName;
 
   final List<Widget> _widgetOptions = <Widget>[

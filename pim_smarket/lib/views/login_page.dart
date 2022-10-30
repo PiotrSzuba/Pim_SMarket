@@ -121,7 +121,6 @@ class _LoginPage extends State<LoginPage> {
       _passwordErrorMessage = "";
       _nameErrorMessage = "";
       _isSigningIn = !_isSigningIn;
-      _userType = UserType.anonymous;
     });
   }
 
@@ -202,8 +201,10 @@ class _LoginPage extends State<LoginPage> {
                                               groupValue: _userType,
                                               onChanged: (type) =>
                                                   onChangeAccountType(type)),
-                                          const Text("Student",
-                                              style: CustomTheme.pinkText)
+                                          Text("Student",
+                                              style: _userTypeError
+                                                  ? CustomTheme.errorText
+                                                  : CustomTheme.pinkText)
                                         ]),
                                         Row(children: [
                                           Radio<UserType>(
@@ -213,9 +214,11 @@ class _LoginPage extends State<LoginPage> {
                                               groupValue: _userType,
                                               onChanged: (type) =>
                                                   onChangeAccountType(type)),
-                                          const Text(
+                                          Text(
                                             "Company",
-                                            style: CustomTheme.pinkText,
+                                            style: _userTypeError
+                                                ? CustomTheme.errorText
+                                                : CustomTheme.pinkText,
                                           ),
                                         ]),
                                       ],
