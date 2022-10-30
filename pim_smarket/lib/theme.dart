@@ -10,6 +10,7 @@ class CustomTheme {
   static const Color pinkColor50 = Color.fromARGB(125, _red, _green, _blue);
   static const double bodyMarginX = 0.05;
   static const double bodyMarginY = 0.05;
+  static const String appName = "Slave market";
 
   static const TextStyle blackText = TextStyle(color: Colors.black);
   static const TextStyle pinkText = TextStyle(color: pinkColor);

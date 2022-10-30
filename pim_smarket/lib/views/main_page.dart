@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pim_smarket/data/data.dart';
 import 'package:pim_smarket/theme.dart';
+import 'package:provider/provider.dart';
 import "views.dart";
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
+
   @override
   State<MainPage> createState() => _BottomNavigator();
 }
@@ -15,6 +18,16 @@ class _BottomNavigator extends State<MainPage> {
     "Add",
     "Profile"
   ];
+
+  static const List<String> _optionsNoAdd = <String>[
+    "Home",
+    "Search",
+    "Profile"
+  ];
+
+  int _selectedIndex = 0;
+  String _title = _options[0];
+
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(title: _options[0]),
     SearchPage(title: _options[1]),
@@ -22,52 +35,90 @@ class _BottomNavigator extends State<MainPage> {
     ProfilePage(title: _options[3]),
   ];
 
-  int _selectedIndex = 0;
-  String _title = _options[0];
+  final List<Widget> _widgetOptionsNoAdd = <Widget>[
+    HomePage(title: _options[0]),
+    SearchPage(title: _options[1]),
+    ProfilePage(title: _options[3]),
+  ];
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index, bool noAdd) {
     setState(() {
-      _title = _options[index];
+      _title = noAdd ? _optionsNoAdd[index] : _options[index];
       _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_title, style: CustomTheme.blackText),
+    List<BottomNavigationBarItem> allNavigation = [
+      BottomNavigationBarItem(
+          icon: const Icon(Icons.home),
+          label: _options[0],
+          backgroundColor: CustomTheme.pinkMaterial),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.search),
+        label: _options[1],
+        backgroundColor: CustomTheme.pinkMaterial,
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.add),
+        label: _options[2],
+        backgroundColor: CustomTheme.pinkMaterial,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.home),
-              label: _options[0],
-              backgroundColor: CustomTheme.pinkMaterial),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.search),
-            label: _options[1],
-            backgroundColor: CustomTheme.pinkMaterial,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.add),
-            label: _options[2],
-            backgroundColor: CustomTheme.pinkMaterial,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person),
-            label: _options[3],
-            backgroundColor: CustomTheme.pinkMaterial,
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black,
-        onTap: _onItemTapped,
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.person),
+        label: _options[3],
+        backgroundColor: CustomTheme.pinkMaterial,
       ),
-    );
+    ];
+
+    List<BottomNavigationBarItem> navigationNoAdd = [
+      BottomNavigationBarItem(
+          icon: const Icon(Icons.home),
+          label: _options[0],
+          backgroundColor: CustomTheme.pinkMaterial),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.search),
+        label: _options[1],
+        backgroundColor: CustomTheme.pinkMaterial,
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.person),
+        label: _options[3],
+        backgroundColor: CustomTheme.pinkMaterial,
+      ),
+    ];
+
+    Widget resolveUserStatus(UserContext userContext) {
+      if (userContext.isAnonymous()) {
+        return const LoginPage(title: "Login");
+      }
+      return userContext.isCompany()
+          ? _widgetOptions.elementAt(_selectedIndex)
+          : _widgetOptionsNoAdd.elementAt(_selectedIndex);
+    }
+
+    return Consumer<UserContext>(
+        builder: (context, userContext, child) => Scaffold(
+              appBar: AppBar(
+                title: Text(_title, style: CustomTheme.blackText),
+              ),
+              body: Center(
+                child: resolveUserStatus(userContext),
+              ),
+              bottomNavigationBar: userContext.isAnonymous()
+                  ? null
+                  : BottomNavigationBar(
+                      items: !userContext.isCompany()
+                          ? navigationNoAdd
+                          : allNavigation,
+                      currentIndex: _selectedIndex,
+                      selectedItemColor: Colors.black,
+                      unselectedItemColor: Colors.black,
+                      backgroundColor: CustomTheme.pinkColor,
+                      onTap: (idx) =>
+                          _onItemTapped(idx, !userContext.isCompany()),
+                    ),
+            ));
   }
 }

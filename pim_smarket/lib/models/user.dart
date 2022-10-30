@@ -41,6 +41,27 @@ class User {
         description = '',
         image = '',
         isAccountPublic = false;
+
+  User.mockStudent()
+      : email = 'student',
+        name = 'Student debil',
+        password = '1234',
+        userType = UserType.student,
+        tags = 'C, Dart, Lisp',
+        description = 'Generic idiot student',
+        image = '',
+        isAccountPublic = true;
+
+  User.mockCompany()
+      : email = 'company',
+        name = 'Greedy Company',
+        password = '1234',
+        userType = UserType.company,
+        tags = 'Fruity fridays, sport card, dynamic teams',
+        description =
+            'We are looking for a student that will sell his soul to us',
+        image = '',
+        isAccountPublic = true;
 }
 
 enum UserType {

@@ -32,8 +32,8 @@ class _SearchPage extends State<SearchPage> {
         style: CustomTheme.pinkTitle,
       ),
       TextInput(
-        placeholder: "Enter your name",
-        title: "Name",
+        placeholder: "Name",
+        label: "Enter your name",
         value: _value,
         onChange: onChange,
       ),

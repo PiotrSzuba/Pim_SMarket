@@ -4,16 +4,18 @@ import 'package:pim_smarket/theme.dart';
 class TextInput extends StatelessWidget {
   const TextInput({
     super.key,
-    required this.title,
+    required this.label,
     required this.value,
-    required this.onChange,
     required this.placeholder,
+    required this.onChange,
+    this.asteriskText,
   });
 
-  final String title;
+  final String label;
   final String placeholder;
   final String value;
   final Function onChange;
+  final bool? asteriskText;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +24,9 @@ class TextInput extends StatelessWidget {
           enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(width: 1, color: CustomTheme.pinkColor),
               borderRadius: CustomTheme.circularBorder),
-          labelText: placeholder,
+          labelText: label,
           labelStyle: CustomTheme.pinkText,
-          hintText: title,
+          hintText: placeholder,
           hintStyle: CustomTheme.pinkText50,
           focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(width: 1, color: CustomTheme.pinkColor),
@@ -34,6 +36,8 @@ class TextInput extends StatelessWidget {
           floatingLabelStyle: CustomTheme.pinkText,
           filled: true,
           fillColor: Colors.black),
+      obscureText: asteriskText ?? false,
+      obscuringCharacter: '*',
       style: const TextStyle(color: CustomTheme.pinkColor),
       onChanged: (value) => onChange(value),
     );

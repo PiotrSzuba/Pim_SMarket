@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       create: (context) => UserContext(),
       child: Consumer<UserContext>(
         builder: (context, value, child) => MaterialApp(
-          title: 'Slave market',
+          title: CustomTheme.appName,
           theme: ThemeData(
               primaryColor: CustomTheme.pinkMaterial,
               primarySwatch: CustomTheme.pinkMaterial,

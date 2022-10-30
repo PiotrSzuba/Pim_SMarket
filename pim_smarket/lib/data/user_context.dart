@@ -8,4 +8,16 @@ class UserContext extends ChangeNotifier {
     this.user = user;
     notifyListeners();
   }
+
+  bool isAnonymous() {
+    return user.userType == UserType.anonymous;
+  }
+
+  bool isCompany() {
+    return user.userType == UserType.company;
+  }
+
+  bool isStudent() {
+    return user.userType == UserType.student;
+  }
 }
