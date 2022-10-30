@@ -31,9 +31,20 @@ class User {
         'image': image,
         'isAccountPublic': isAccountPublic,
       };
+
+  User.empty()
+      : email = '',
+        name = '',
+        password = '',
+        userType = UserType.anonymous,
+        tags = '',
+        description = '',
+        image = '',
+        isAccountPublic = false;
 }
 
 enum UserType {
   company,
   student,
+  anonymous,
 }

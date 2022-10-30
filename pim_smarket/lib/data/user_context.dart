@@ -1,14 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:pim_smarket/models/models.dart';
 
-class UserContext extends InheritedWidget {
-  final User user;
+class UserContext extends ChangeNotifier {
+  User user = User.empty();
 
-  const UserContext({super.key, required Widget child, required this.user})
-      : super(child: child);
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return true;
+  void changeUser(User user) {
+    this.user = user;
+    notifyListeners();
   }
 }
