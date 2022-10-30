@@ -34,7 +34,6 @@ class _SearchPage extends State<SearchPage> {
       TextInput(
         placeholder: "Name",
         label: "Enter your name",
-        value: _value,
         onChange: onChange,
       ),
       Container(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pim_smarket/models/models.dart';
 
 class UserContext extends ChangeNotifier {
-  User user = User.mockStudent(); //default User.empty();
+  User user = User.mockCompany(); //default User.empty();
 
   void changeUser(User user) {
     this.user = user;

@@ -26,7 +26,7 @@ class _BottomNavigator extends State<MainPage> {
     "Profile"
   ];
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
   String _title = CustomTheme.appName;
 
   final List<Widget> _widgetOptions = <Widget>[
@@ -54,7 +54,7 @@ class _BottomNavigator extends State<MainPage> {
     List<BottomNavigationBarItem> allNavigation = [
       BottomNavigationBarItem(
           icon: const Icon(Icons.home),
-          label: _options[0],
+          label: "Home",
           backgroundColor: CustomTheme.pinkMaterial),
       BottomNavigationBarItem(
         icon: const Icon(Icons.search),

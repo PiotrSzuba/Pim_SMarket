@@ -94,7 +94,6 @@ class _LoginPage extends State<LoginPage> {
                           ? null
                           : TextInput(
                               label: "Enter your name",
-                              value: _name,
                               placeholder: "name",
                               onChange: onChangeName),
                     ),
@@ -102,7 +101,6 @@ class _LoginPage extends State<LoginPage> {
                         margin: const EdgeInsets.symmetric(vertical: 5.0),
                         child: TextInput(
                           label: "Enter your email",
-                          value: _email,
                           onChange: onChangeEmail,
                           placeholder: "Email",
                           isError: _emailError,
@@ -111,7 +109,6 @@ class _LoginPage extends State<LoginPage> {
                       margin: const EdgeInsets.symmetric(vertical: 5.0),
                       child: TextInput(
                         label: "Enter your password",
-                        value: _password,
                         onChange: onChangePassword,
                         placeholder: "password",
                         asteriskText: true,
