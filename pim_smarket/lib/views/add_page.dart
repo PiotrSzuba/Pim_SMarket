@@ -16,7 +16,7 @@ class AddPage extends StatefulWidget {
 class _AddPage extends State<AddPage> {
   List<Widget> _tagsWidgets = [];
   List<String> _tagsValues = [];
-  String _description = "";
+  final _descriptionController = TextEditingController();
 
   void addNewTag() {
     setState(() {
@@ -37,12 +37,6 @@ class _AddPage extends State<AddPage> {
     _tagsValues[index] = value;
   }
 
-  void onChangeDescription(String value) {
-    setState(() {
-      _description = value;
-    });
-  }
-
   void onSubmit(UserContext userContext) {
     var tagsValue = _tagsValues.where((element) => element.isNotEmpty);
     var tags = tagsValue.join(", ");
@@ -50,12 +44,14 @@ class _AddPage extends State<AddPage> {
       tags.replaceRange(tags.length - 2, tags.length, "");
     }
 
+    var user = userContext.user;
+    print("$tags ${_descriptionController.text} ${user}");
+
     setState(() {
-      _description = "";
+      _descriptionController.text = '';
       _tagsValues = [];
       _tagsWidgets = [];
     });
-    print("$tags $_description");
   }
 
   Widget newTextInput() {
@@ -102,8 +98,8 @@ class _AddPage extends State<AddPage> {
                             child: TextInput(
                               label: "Enter description",
                               placeholder: "Description",
-                              onChange: onChangeDescription,
                               multiLine: true,
+                              controller: _descriptionController,
                             )),
                         Container(
                             margin: const EdgeInsets.symmetric(vertical: 5.0),

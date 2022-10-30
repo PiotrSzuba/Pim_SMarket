@@ -6,7 +6,7 @@ class TextInput extends StatefulWidget {
     super.key,
     required this.label,
     required this.placeholder,
-    required this.onChange,
+    this.onChange,
     this.asteriskText,
     this.isError,
     this.multiLine,
@@ -16,7 +16,7 @@ class TextInput extends StatefulWidget {
   final String label;
   final String placeholder;
   final TextEditingController? controller;
-  final Function onChange;
+  final Function(String)? onChange;
   final bool? asteriskText;
   final bool? isError;
   final bool? multiLine;
@@ -46,9 +46,17 @@ class _TextInput extends State<TextInput> {
     return TextInputType.text;
   }
 
+  final myController = TextEditingController();
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       maxLines: _isInputMultiLine() ? null : 1,
       minLines: _isInputMultiLine() ? 5 : 1,
       keyboardType: _getInputType(),
@@ -72,7 +80,8 @@ class _TextInput extends State<TextInput> {
       obscureText: widget.asteriskText ?? false,
       obscuringCharacter: '*',
       style: _getTextStyle(),
-      onChanged: (value) => widget.onChange(value),
+      onChanged: (value) =>
+          widget.onChange == null ? null : widget.onChange!(value),
     );
   }
 }

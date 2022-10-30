@@ -31,13 +31,16 @@ class _HomePage extends State<HomePage> {
             onPressed: () => print("Company ${index + 1} clicked"),
           ));
 
+  List<Widget> _getItems(UserContext userContext) {
+    return userContext.isStudent() ? companies : students;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PageTemplate(
         child: SingleChildScrollView(
             child: Consumer<UserContext>(
-                builder: (context, userContext, child) => Column(
-                    children:
-                        userContext.isStudent() ? companies : students))));
+                builder: (context, userContext, child) =>
+                    Column(children: _getItems(userContext)))));
   }
 }
