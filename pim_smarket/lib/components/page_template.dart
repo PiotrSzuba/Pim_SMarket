@@ -13,9 +13,8 @@ class PageTemplate extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: width * CustomTheme.bodyMarginX,
-              vertical: height * CustomTheme.bodyMarginY),
+          padding:
+              EdgeInsets.symmetric(horizontal: width * CustomTheme.bodyMarginX),
           child: child),
       backgroundColor: CustomTheme.backgroundColor,
     );
