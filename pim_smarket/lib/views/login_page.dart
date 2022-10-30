@@ -87,7 +87,7 @@ class _LoginPage extends State<LoginPage> {
       validatePassword(_password);
       validateName(_name);
     });
-    print("${_email} ${_name} ${_password}");
+    print("$_email $_name $_password");
   }
 
   void onChangeEmail(String email) {

@@ -45,7 +45,7 @@ class _AddPage extends State<AddPage> {
     }
 
     var user = userContext.user;
-    print("$tags ${_descriptionController.text} ${user}");
+    print("$tags ${_descriptionController.text} $user");
 
     setState(() {
       _descriptionController.text = '';
