@@ -9,6 +9,7 @@ class TextInput extends StatefulWidget {
     this.onChange,
     this.asteriskText,
     this.isError,
+    this.errorMessage,
     this.multiLine,
     this.controller,
   });
@@ -19,6 +20,7 @@ class TextInput extends StatefulWidget {
   final Function(String)? onChange;
   final bool? asteriskText;
   final bool? isError;
+  final String? errorMessage;
   final bool? multiLine;
 
   @override
@@ -46,6 +48,13 @@ class _TextInput extends State<TextInput> {
     return TextInputType.text;
   }
 
+  String _getLabelText() {
+    if (widget.errorMessage == null) return widget.label;
+    if (widget.isError == null) return widget.label;
+    if (widget.isError!) return widget.errorMessage!;
+    return widget.label;
+  }
+
   final myController = TextEditingController();
   @override
   void dispose() {
@@ -64,7 +73,7 @@ class _TextInput extends State<TextInput> {
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(width: 1, color: _getBorderColor()),
               borderRadius: CustomTheme.circularBorder),
-          labelText: widget.label,
+          labelText: _getLabelText(),
           labelStyle: _getTextStyle(),
           hintText: widget.placeholder,
           hintStyle: CustomTheme.pinkText50,

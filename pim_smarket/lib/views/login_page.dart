@@ -16,13 +16,59 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   String _email = "";
+  String _emailErrorMessage = "";
   bool _emailError = false;
+
   String _password = "";
+  String _passwordErrorMessage = "";
   bool _passwordError = false;
+
   String _name = "";
+  String _nameErrorMessage = "";
+  bool _nameError = false;
+
+  UserType _userType = UserType.anonymous;
+  final _userTypeMessage = "You have to pick your account type !";
+  bool _userTypeError = false;
+
   bool _isSigningIn = true;
 
+  void validateEmail(String email) {
+    if (email.isEmpty) {
+      _emailError = true;
+      _emailErrorMessage = "Email cannot be empty !";
+      return;
+    }
+
+    _emailError = false;
+    _emailErrorMessage = "";
+  }
+
+  void validatePassword(String password) {
+    if (password.isEmpty) {
+      _passwordError = true;
+      _passwordErrorMessage = "Password cannot be empty !";
+      return;
+    }
+    _passwordError = false;
+    _passwordErrorMessage = "";
+  }
+
+  void validateName(String name) {
+    if (name.isEmpty) {
+      _nameError = true;
+      _nameErrorMessage = "Name cannot be empty !";
+      return;
+    }
+    _nameError = false;
+    _nameErrorMessage = "";
+  }
+
   void onSignIn(UserContext userContext) {
+    setState(() {
+      validatePassword(_password);
+      validateEmail(_email);
+    });
     if (_password != "1234") return;
     if (_email == "student") {
       userContext.changeUser(User.mockStudent());
@@ -34,41 +80,56 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-  void onSignUp(UserContext userContext) {}
+  void onSignUp(UserContext userContext) {
+    setState(() {
+      if (_userType == UserType.anonymous) _userTypeError = true;
+      validateEmail(_email);
+      validatePassword(_password);
+      validateName(_name);
+    });
+    print("${_email} ${_name} ${_password}");
+  }
 
   void onChangeEmail(String email) {
     setState(() {
       _email = email;
-      if (email == "student" || email == "company") {
-        _emailError = false;
-      } else {
-        _emailError = true;
-      }
-      if (email.isEmpty) _emailError = false;
+      validateEmail(email);
     });
   }
 
   void onChangePassword(String password) {
     setState(() {
       _password = password;
-      if (password == "1234") {
-        _passwordError = false;
-      } else {
-        _passwordError = true;
-      }
-      if (password.isEmpty) _passwordError = false;
+      validatePassword(password);
     });
   }
 
   void onChangeName(String name) {
     setState(() {
       _name = name;
+      validateName(name);
     });
   }
 
   void onChangeMode() {
     setState(() {
+      _emailError = false;
+      _passwordError = false;
+      _userTypeError = false;
+      _nameError = false;
+      _emailErrorMessage = "";
+      _passwordErrorMessage = "";
+      _nameErrorMessage = "";
       _isSigningIn = !_isSigningIn;
+      _userType = UserType.anonymous;
+    });
+  }
+
+  void onChangeAccountType(UserType? userType) {
+    if (userType == null) return;
+    setState(() {
+      _userTypeError = false;
+      _userType = userType;
     });
   }
 
@@ -95,6 +156,8 @@ class _LoginPage extends State<LoginPage> {
                           : TextInput(
                               label: "Enter your name",
                               placeholder: "name",
+                              isError: _nameError,
+                              errorMessage: _nameErrorMessage,
                               onChange: onChangeName),
                     ),
                     Container(
@@ -104,6 +167,7 @@ class _LoginPage extends State<LoginPage> {
                           onChange: onChangeEmail,
                           placeholder: "Email",
                           isError: _emailError,
+                          errorMessage: _emailErrorMessage,
                         )),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 5.0),
@@ -113,8 +177,57 @@ class _LoginPage extends State<LoginPage> {
                         placeholder: "password",
                         asteriskText: true,
                         isError: _passwordError,
+                        errorMessage: _passwordErrorMessage,
                       ),
                     ),
+                    Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: _isSigningIn
+                            ? null
+                            : Column(children: [
+                                Theme(
+                                    data: ThemeData(
+                                        unselectedWidgetColor: _userTypeError
+                                            ? CustomTheme.errorColor
+                                            : CustomTheme.pinkColor50),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(children: [
+                                          Radio<UserType>(
+                                              activeColor:
+                                                  CustomTheme.pinkColor,
+                                              value: UserType.student,
+                                              groupValue: _userType,
+                                              onChanged: (type) =>
+                                                  onChangeAccountType(type)),
+                                          const Text("Student",
+                                              style: CustomTheme.pinkText)
+                                        ]),
+                                        Row(children: [
+                                          Radio<UserType>(
+                                              activeColor:
+                                                  CustomTheme.pinkColor,
+                                              value: UserType.company,
+                                              groupValue: _userType,
+                                              onChanged: (type) =>
+                                                  onChangeAccountType(type)),
+                                          const Text(
+                                            "Company",
+                                            style: CustomTheme.pinkText,
+                                          ),
+                                        ]),
+                                      ],
+                                    )),
+                                SizedBox(
+                                    child: _userTypeError
+                                        ? Text(
+                                            _userTypeMessage,
+                                            style: CustomTheme.errorText,
+                                          )
+                                        : null)
+                              ])),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Button(
