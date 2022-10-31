@@ -15,14 +15,12 @@ class MainPage extends StatefulWidget {
 class _BottomNavigator extends State<MainPage> {
   static const List<String> _options = <String>[
     CustomTheme.appName,
-    "Search",
     "Add",
     "Profile"
   ];
 
   static const List<String> _optionsNoAdd = <String>[
     CustomTheme.appName,
-    "Search",
     "Profile"
   ];
 
@@ -31,15 +29,13 @@ class _BottomNavigator extends State<MainPage> {
 
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(title: _options[0]),
-    SearchPage(title: _options[1]),
-    AddPage(title: _options[2]),
-    ProfilePage(title: _options[3]),
+    AddPage(title: _options[1]),
+    ProfilePage(title: _options[2]),
   ];
 
   final List<Widget> _widgetOptionsNoAdd = <Widget>[
     HomePage(title: _options[0]),
-    SearchPage(title: _options[1]),
-    ProfilePage(title: _options[3]),
+    ProfilePage(title: _options[2]),
   ];
 
   void _onItemTapped(int index, bool noAdd) {
@@ -57,18 +53,13 @@ class _BottomNavigator extends State<MainPage> {
           label: "Home",
           backgroundColor: CustomTheme.pinkMaterial),
       BottomNavigationBarItem(
-        icon: const Icon(Icons.search),
+        icon: const Icon(Icons.add),
         label: _options[1],
         backgroundColor: CustomTheme.pinkMaterial,
       ),
       BottomNavigationBarItem(
-        icon: const Icon(Icons.add),
-        label: _options[2],
-        backgroundColor: CustomTheme.pinkMaterial,
-      ),
-      BottomNavigationBarItem(
         icon: const Icon(Icons.person),
-        label: _options[3],
+        label: _options[2],
         backgroundColor: CustomTheme.pinkMaterial,
       ),
     ];
@@ -79,13 +70,8 @@ class _BottomNavigator extends State<MainPage> {
           label: "Home",
           backgroundColor: CustomTheme.pinkMaterial),
       BottomNavigationBarItem(
-        icon: const Icon(Icons.search),
-        label: _options[1],
-        backgroundColor: CustomTheme.pinkMaterial,
-      ),
-      BottomNavigationBarItem(
         icon: const Icon(Icons.person),
-        label: _options[3],
+        label: _options[2],
         backgroundColor: CustomTheme.pinkMaterial,
       ),
     ];

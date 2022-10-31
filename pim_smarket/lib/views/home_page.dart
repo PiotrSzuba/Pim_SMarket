@@ -1,6 +1,9 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:pim_smarket/components/components.dart';
 import 'package:pim_smarket/data/data.dart';
+import 'package:pim_smarket/theme.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,12 +38,78 @@ class _HomePage extends State<HomePage> {
     return userContext.isStudent() ? companies : students;
   }
 
+  String searchName = '';
+  String searchTags = '';
+
   @override
   Widget build(BuildContext context) {
+    print("name: $searchName tags: $searchTags");
     return PageTemplate(
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => _searchPopup(context),
+            backgroundColor: CustomTheme.pinkColor,
+            child: const Icon(Icons.search, color: Colors.black)),
         child: SingleChildScrollView(
             child: Consumer<UserContext>(
                 builder: (context, userContext, child) =>
                     Column(children: _getItems(userContext)))));
+  }
+
+  Future<void> _searchPopup(BuildContext context) {
+    var nameController = TextEditingController();
+    var tagsController = TextEditingController();
+
+    void onSearch() {
+      Navigator.of(context).pop();
+      setState(() {
+        searchName = nameController.text;
+        searchTags = tagsController.text;
+      });
+    }
+
+    return showDialog(
+        context: context,
+        builder: (context) => Dialog(
+            backgroundColor: Colors.black,
+            child: Container(
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              margin: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: const Text(
+                        "Search by tags",
+                        style: CustomTheme.pinkTitle,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: TextInput(
+                        label: "Enter tags",
+                        placeholder: "Tags",
+                        controller: tagsController,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.only(bottom: 5.0, top: 15),
+                      child: const Text(
+                        "Search by name",
+                        style: CustomTheme.pinkTitle,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: TextInput(
+                        label: "Enter name",
+                        placeholder: "Name",
+                        controller: nameController,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.only(top: 15.0),
+                      child:
+                          Button(title: "Search", onClicked: () => onSearch())),
+                ],
+              ),
+            )));
   }
 }
