@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pim_smarket/components/components.dart';
 import 'package:pim_smarket/data/data.dart';
 import 'package:pim_smarket/models/models.dart';
+import 'package:pim_smarket/services/auth.dart';
+import 'package:pim_smarket/services/helper_functions.dart';
 import 'package:pim_smarket/theme.dart';
+import 'package:pim_smarket/views/main_page.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,6 +35,8 @@ class _LoginPage extends State<LoginPage> {
   bool _userTypeError = false;
 
   bool _isSigningIn = true;
+
+  AuthMethods authMethods = AuthMethods();
 
   void validateEmail(String email) {
     if (email.isEmpty) {
@@ -86,6 +91,29 @@ class _LoginPage extends State<LoginPage> {
       validateEmail(_email);
       validatePassword(_password);
       validateName(_name);
+
+      Map<String,String> userInfoMap = {
+        "name" : _name,
+        "email" : _email
+      };
+
+      authMethods.signUpWithEmailAndPassword(_email, _password)
+      .then((value){
+        if(value != null){
+          HelperFunctions.saveUserLoggedInSharedPreference(true);
+          Navigator.pushReplacement(
+            context,
+             MaterialPageRoute(
+              builder: (context) => MainPage()
+              ));
+        }
+        else{
+          Navigator.pushReplacement(context, MaterialPageRoute(
+              builder: (context) => LoginPage(title: "Try again")
+          ));
+        }
+      });
+
     });
     print("$_email $_name $_password");
   }
