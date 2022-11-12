@@ -5,6 +5,7 @@ import 'package:pim_smarket/models/models.dart';
 import 'package:pim_smarket/services/auth.dart';
 import 'package:pim_smarket/services/helper_functions.dart';
 import 'package:pim_smarket/theme.dart';
+import 'package:pim_smarket/views/home_page.dart';
 import 'package:pim_smarket/views/main_page.dart';
 import 'package:provider/provider.dart';
 
@@ -83,6 +84,24 @@ class _LoginPage extends State<LoginPage> {
       userContext.changeUser(User.mockCompany());
       return;
     }
+
+    HelperFunctions.saveUserEmailSharedPreference(_email);
+
+    authMethods.signInWithEmailAndPassword(_email, _password)
+    .then((value){
+      if(value != null){
+        HelperFunctions.saveUserLoggedInSharedPreference(true);
+        Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => HomePage(title: "NWM")
+        ));
+      }
+      else{
+        Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => LoginPage(title: "NWM")
+        ));
+      }
+    });
+
   }
 
   void onSignUp(UserContext userContext) {
@@ -109,7 +128,7 @@ class _LoginPage extends State<LoginPage> {
         }
         else{
           Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context) => LoginPage(title: "Try again")
+              builder: (context) => HomePage(title: "NWM")
           ));
         }
       });
