@@ -10,8 +10,12 @@ class DatabaseMethods{
         print(e);
       });
   }
+  updateUserInfo(userMap, email){
+    FirebaseFirestore.instance.collection("users")
+        .doc(email).update(userMap);
+  }
 
-    getUserByUserEmail2(String userEmail) async{
+  getUserByUserEmail2(String userEmail) async{
     return await FirebaseFirestore.instance.collection("users")
         .where("email", isEqualTo: userEmail ).get();
   }
