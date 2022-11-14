@@ -50,7 +50,7 @@ class User {
         'email': email,
         'name': name,
         'password': password,
-        'userType': userTypeToInt(),
+        'userType': userType,
         'tags': tags,
         'description': description,
         'image': image,

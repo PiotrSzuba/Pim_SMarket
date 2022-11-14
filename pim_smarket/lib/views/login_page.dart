@@ -33,7 +33,7 @@ class _LoginPage extends State<LoginPage> {
   String _nameErrorMessage = "";
   bool _nameError = false;
 
-  int _userType = 0; //usertype changed to int
+  int _userType = 2; //usertype changed to int
   final _userTypeMessage = "You have to pick your account type !";
   bool _userTypeError = false;
 
@@ -108,7 +108,7 @@ class _LoginPage extends State<LoginPage> {
 
   void onSignUp(UserContext userContext) {
     setState(() {
-      if (_userType == UserType.anonymous) _userTypeError = true;
+      if (_userType == 2) _userTypeError = true;
       validateEmail(_email);
       validatePassword(_password);
       validateName(_name);
