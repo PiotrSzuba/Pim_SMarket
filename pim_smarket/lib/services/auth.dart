@@ -50,7 +50,7 @@ class AuthMethods{
 
   Future signOut() async{
     try{
-      HelperFunctions.saveUserLoggedInSharedPreference(false);
+  //    HelperFunctions.saveUserLoggedInSharedPreference(false);
       return await _auth.signOut();
     }catch(e){
       print(e);

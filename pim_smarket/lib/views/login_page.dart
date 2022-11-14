@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pim_smarket/components/components.dart';
 import 'package:pim_smarket/data/data.dart';
 import 'package:pim_smarket/models/models.dart';
 import 'package:pim_smarket/services/auth.dart';
+import 'package:pim_smarket/services/database.dart';
 import 'package:pim_smarket/services/helper_functions.dart';
 import 'package:pim_smarket/theme.dart';
 import 'package:pim_smarket/views/home_page.dart';
@@ -31,13 +33,14 @@ class _LoginPage extends State<LoginPage> {
   String _nameErrorMessage = "";
   bool _nameError = false;
 
-  UserType _userType = UserType.anonymous;
+  int _userType = 0; //usertype changed to int
   final _userTypeMessage = "You have to pick your account type !";
   bool _userTypeError = false;
 
   bool _isSigningIn = true;
 
   AuthMethods authMethods = AuthMethods();
+  DatabaseMethods databaseMethods = DatabaseMethods();
 
   void validateEmail(String email) {
     if (email.isEmpty) {
@@ -75,30 +78,29 @@ class _LoginPage extends State<LoginPage> {
       validatePassword(_password);
       validateEmail(_email);
     });
-    if (_password != "1234") return;
-    if (_email == "student") {
-      userContext.changeUser(User.mockStudent());
-      return;
-    }
-    if (_email == "company") {
-      userContext.changeUser(User.mockCompany());
-      return;
-    }
 
-    HelperFunctions.saveUserEmailSharedPreference(_email);
+//    if (_password != "1234") return;
+//    if (_email == "student") {
+//      userContext.changeUser(User.mockStudent());
+//      return;
+//    }
+//    if (_email == "company") {
+//      userContext.changeUser(User.mockCompany());
+//      return;
+//    }
+
+    User user = User.mockStudent();
+    databaseMethods.getUserByUserEmail(_email)
+      .then((val){
+        user = User.fromJson(val);
+      });
 
     authMethods.signInWithEmailAndPassword(_email, _password)
     .then((value){
       if(value != null){
-        HelperFunctions.saveUserLoggedInSharedPreference(true);
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => HomePage(title: "NWM")
-        ));
-      }
-      else{
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => LoginPage(title: "NWM")
-        ));
+        userContext.changeUser(user);
+        print(user.email);
+        return;
       }
     });
 
@@ -111,25 +113,12 @@ class _LoginPage extends State<LoginPage> {
       validatePassword(_password);
       validateName(_name);
 
-      Map<String,String> userInfoMap = {
-        "name" : _name,
-        "email" : _email
-      };
+      User user = User(_email, _name, _password, _userType, "", "", "", false);
 
       authMethods.signUpWithEmailAndPassword(_email, _password)
       .then((value){
         if(value != null){
-          HelperFunctions.saveUserLoggedInSharedPreference(true);
-          Navigator.pushReplacement(
-            context,
-             MaterialPageRoute(
-              builder: (context) => MainPage()
-              ));
-        }
-        else{
-          Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context) => HomePage(title: "NWM")
-          ));
+          databaseMethods.uploadUserInfo(user.toJson(),_email);
         }
       });
 
@@ -171,7 +160,7 @@ class _LoginPage extends State<LoginPage> {
     });
   }
 
-  void onChangeAccountType(UserType? userType) {
+  void onChangeAccountType(int? userType) { //usertype changed to int
     if (userType == null) return;
     setState(() {
       _userTypeError = false;
@@ -241,10 +230,10 @@ class _LoginPage extends State<LoginPage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(children: [
-                                          Radio<UserType>(
+                                          Radio<int>( //usertype changed to int
                                               activeColor:
                                                   CustomTheme.pinkColor,
-                                              value: UserType.student,
+                                              value: 1,
                                               groupValue: _userType,
                                               onChanged: (type) =>
                                                   onChangeAccountType(type)),
@@ -254,10 +243,10 @@ class _LoginPage extends State<LoginPage> {
                                                   : CustomTheme.pinkText)
                                         ]),
                                         Row(children: [
-                                          Radio<UserType>(
+                                          Radio<int>( //usertype changed to int
                                               activeColor:
                                                   CustomTheme.pinkColor,
-                                              value: UserType.company,
+                                              value: 0,
                                               groupValue: _userType,
                                               onChanged: (type) =>
                                                   onChangeAccountType(type)),

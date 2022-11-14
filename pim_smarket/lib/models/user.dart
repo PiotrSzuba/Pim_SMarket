@@ -1,12 +1,37 @@
 class User {
+
   final String email;
   final String name;
   final String password;
-  final UserType userType;
+  final int userType; //changed to int
   final String tags;
   final String description;
   final String image;
   final bool isAccountPublic;
+
+  int userTypeToInt(){
+    if(userType == UserType.company){
+      return 0;
+    }
+    else if(userType == UserType.student){
+      return 1;
+    }
+    else{
+      return 2;
+    }
+  }
+
+  UserType userTypeInt2userTypeUT(int i){
+    if(i == 0){
+      return UserType.company;
+    }
+    else if(i == 1){
+      return UserType.student;
+    }
+    else{
+      return UserType.anonymous;
+    }
+  }
 
   User(this.email, this.name, this.password, this.userType, this.tags,
       this.description, this.image, this.isAccountPublic);
@@ -25,7 +50,7 @@ class User {
         'email': email,
         'name': name,
         'password': password,
-        'userType': userType,
+        'userType': userTypeToInt(),
         'tags': tags,
         'description': description,
         'image': image,
@@ -36,7 +61,7 @@ class User {
       : email = '',
         name = '',
         password = '',
-        userType = UserType.anonymous,
+        userType = 2,
         tags = '',
         description = '',
         image = '',
@@ -46,7 +71,7 @@ class User {
       : email = 'student',
         name = 'Student debil',
         password = '1234',
-        userType = UserType.student,
+        userType = 1,
         tags = 'C, Dart, Lisp',
         description = 'Generic idiot student',
         image = '',
@@ -56,7 +81,7 @@ class User {
       : email = 'company',
         name = 'Greedy Company',
         password = '1234',
-        userType = UserType.company,
+        userType = 0,
         tags = 'Fruity fridays, sport card, dynamic teams',
         description =
             'We are looking for a student that will sell his soul to us',

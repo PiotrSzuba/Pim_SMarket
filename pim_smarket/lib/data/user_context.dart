@@ -10,14 +10,14 @@ class UserContext extends ChangeNotifier {
   }
 
   bool isAnonymous() {
-    return user.userType == UserType.anonymous;
+    return user.userType == 2;// user.userType == UserType.anonymous;
   }
 
   bool isCompany() {
-    return user.userType == UserType.company;
+    return user.userType == 0;
   }
 
   bool isStudent() {
-    return user.userType == UserType.student;
+    return user.userType == 1;
   }
 }

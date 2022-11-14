@@ -1,4 +1,4 @@
-import "package:shared_preferences/shared_preferences.dart";
+/*import "package:shared_preferences/shared_preferences.dart";
 
 class HelperFunctions{
 
@@ -39,4 +39,4 @@ class HelperFunctions{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.getString(sharedPreferenceUserEmail);
   }
-}
+}*/
