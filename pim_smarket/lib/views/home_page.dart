@@ -121,53 +121,87 @@ class _HomePage extends State<HomePage> {
 
   DatabaseMethods databaseMethods = DatabaseMethods();
   late final Stream<QuerySnapshot> usersStream;
+  late final Stream<QuerySnapshot> offersStream;
 
   Widget usersList(UserContext userContext){
-    try{
-      return StreamBuilder(
-        stream: usersStream,
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
-          if (snapshot.hasError) {
-            print("not good");
-            return const Scaffold();
-          }
+    if(userContext.user.userType == 0){
+      try{
+        return StreamBuilder(
+          stream: usersStream,
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+            if (snapshot.hasError) {
+              print("not good");
+              return const Scaffold();
+            }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            print("Waiting for usersStream initialization");
-            return const Scaffold();
-          }
-          print("Initialization compleated");
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data = document.data()! as Map<
-                  String,
-                  dynamic>;
+            if (snapshot.connectionState == ConnectionState.waiting) {
+             print("Waiting for usersStream initialization");
+              return const Scaffold();
+            }
+            print("Initialization compleated");
+            return ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data = document.data()! as Map<
+                    String,
+                    dynamic>;
 
-              if(data["userType"] != userContext.user.userType){
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});
-              }
-              else{
-                return const SizedBox();
-              }
+                if(data["userType"] == 1){
+                  return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});
+                }
+                else{
+                  return const SizedBox();
+                }
               
-        }).toList()
-          );
-        },
-      );
-    }catch(e){print(e);return const Scaffold(body: Text("Sheep not Gucci"),);}
+          }).toList()
+            );
+          },
+        );
+      }catch(e){print(e);return const Scaffold(body: Text("Sheep not Gucci"),);}
+    }
+    else{
+      try{
+        return StreamBuilder(
+          stream: offersStream,
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+            if (snapshot.hasError) {
+              print("not good");
+              return const Scaffold();
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+             print("Waiting for offersStream initialization");
+              return const Scaffold();
+            }
+            print("Initialization compleated");
+            return ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data = document.data()! as Map<
+                    String,
+                    dynamic>;
+
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});           
+          }).toList()
+            );
+          },
+        );
+      }catch(e){print(e);return const Scaffold(body: Text("Sheep not Gucci"),);}
+    }
   }
 
   @override
   void initState(){
-    getUsersInfo();
+    getData();
     super.initState();
   }
 
-  getUsersInfo() async{
+  getData() async{
     databaseMethods.getUsersData().then((value){
       setState(() {
         usersStream = value;
       });
+    });
+    databaseMethods.getOffers().then((value){
+      offersStream = value;
     });
   }
 }

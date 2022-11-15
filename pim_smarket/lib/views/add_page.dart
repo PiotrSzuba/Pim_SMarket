@@ -59,6 +59,7 @@ class _AddPage extends State<AddPage> {
     });
 
     Map<String,dynamic> offerMap = {
+      'name'  : userContext.user.name,
       'email' : userContext.user.email,
       'tags' : tags,
       'description' : description

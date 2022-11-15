@@ -35,5 +35,9 @@ class DatabaseMethods{
     return await FirebaseFirestore.instance.collection("users")
       .snapshots();
   }
+  getOffers() async{
+    return await FirebaseFirestore.instance.collection("offers")
+      .snapshots();
+  }
 
 }
