@@ -19,6 +19,7 @@ class _ProfilePage extends State<ProfilePage> {
 
   String editName = '';
   String editDescription = '';
+  String editTags = '';
 
   @override
   Widget build(BuildContext context) {
@@ -69,21 +70,25 @@ class _ProfilePage extends State<ProfilePage> {
   Future<void> _editProfilePopup(BuildContext context, UserContext userContext) {
     var nameController = TextEditingController();
     var descriptionController = TextEditingController();
+    var tagsController = TextEditingController();
 
     DatabaseMethods databaseMethods = DatabaseMethods();
 
     nameController.text = userContext.user.name;                // initial value
     descriptionController.text = userContext.user.description;  //initial value
+    tagsController.text = userContext.user.tags;
 
     void onEdit() {
       Navigator.of(context).pop();
       setState(() {
         editName = nameController.text;
         editDescription = descriptionController.text;
+        editTags = tagsController.text; 
 
         Map<String,dynamic> editedUserMap = {
           "name" : editName,
-          "description" : editDescription
+          "description" : editDescription,
+          "tags" : editTags
         };
 
         databaseMethods.updateUserInfo(editedUserMap,userContext.user.email);
@@ -133,6 +138,19 @@ class _ProfilePage extends State<ProfilePage> {
                         label: "Description",
                         placeholder: "Description",
                         controller: descriptionController,
+                      )),
+                      Container(
+                      margin: const EdgeInsets.only(bottom: 5.0, top: 15),
+                      child: const Text(
+                        "Edit tags",
+                        style: CustomTheme.pinkTitle,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: TextInput(
+                        label: "Tags",
+                        placeholder: "Tags",
+                        controller: tagsController,
                       )),
                   Container(
                       margin: const EdgeInsets.only(top: 15.0),
