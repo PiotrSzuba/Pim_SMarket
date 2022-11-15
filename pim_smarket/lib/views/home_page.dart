@@ -71,6 +71,7 @@ class _HomePage extends State<HomePage> {
         searchName = nameController.text;
         searchTags = tagsController.text;
       });
+      print("searching");
     }
 
     return showDialog(
@@ -145,8 +146,19 @@ class _HomePage extends State<HomePage> {
                     String,
                     dynamic>;
 
+                String tags = data["tags"];
                 if(data["userType"] == 1){
-                  return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});
+                  if(searchName != "" || searchTags != ""){
+                    if(data["name"] == searchName || tags.contains(searchTags)){
+                      return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});
+                    }
+                    else{
+                      return const SizedBox();
+                    }
+                  }
+                  else{
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});
+                  }
                 }
                 else{
                   return const SizedBox();
@@ -156,7 +168,7 @@ class _HomePage extends State<HomePage> {
             );
           },
         );
-      }catch(e){print(e);return const Scaffold(body: Text("Sheep not Gucci"),);}
+      }catch(e){print(e);return const Scaffold(body: Text("Sheep's not Gucci",style: TextStyle(color: Colors.white)),);}
     }
     else{
       try{
@@ -184,7 +196,7 @@ class _HomePage extends State<HomePage> {
             );
           },
         );
-      }catch(e){print(e);return const Scaffold(body: Text("Sheep not Gucci"),);}
+      }catch(e){print(e);return const Scaffold(body: Text("Sheep's not Gucci",style: TextStyle(color: Colors.white),),);}
     }
   }
 
