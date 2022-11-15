@@ -1,8 +1,10 @@
 import 'dart:html';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pim_smarket/components/components.dart';
 import 'package:pim_smarket/data/data.dart';
+import 'package:pim_smarket/services/database.dart';
 import 'package:pim_smarket/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +54,11 @@ class _HomePage extends State<HomePage> {
         child: SingleChildScrollView(
             child: Consumer<UserContext>(
                 builder: (context, userContext, child) =>
-                    Column(children: _getItems(userContext)))));
+                    SizedBox(
+                      width: 500,
+                      height: 500,
+                      child: usersList(userContext)
+                      ))));
   }
 
   Future<void> _searchPopup(BuildContext context) {
@@ -111,5 +117,57 @@ class _HomePage extends State<HomePage> {
                 ],
               ),
             )));
+  }
+
+  DatabaseMethods databaseMethods = DatabaseMethods();
+  late final Stream<QuerySnapshot> usersStream;
+
+  Widget usersList(UserContext userContext){
+    try{
+      return StreamBuilder(
+        stream: usersStream,
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+          if (snapshot.hasError) {
+            print("not good");
+            return const Scaffold();
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            print("Waiting for usersStream initialization");
+            return const Scaffold();
+          }
+          print("Initialization compleated");
+          return ListView(
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data = document.data()! as Map<
+                  String,
+                  dynamic>;
+
+              if(data["userType"] != userContext.user.userType){
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});
+              }
+              else{
+                return const SizedBox();
+              }
+              
+        }).toList()
+          );
+        },
+      );
+    }catch(e){print(e);return const Scaffold(body: Text("Sheep not Gucci"),);}
+  }
+
+  @override
+  void initState(){
+    getUsersInfo();
+    super.initState();
+  }
+
+  getUsersInfo() async{
+    databaseMethods.getUsersData().then((value){
+      setState(() {
+        usersStream = value;
+      });
+    });
   }
 }

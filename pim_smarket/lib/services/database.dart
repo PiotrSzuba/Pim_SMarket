@@ -15,17 +15,17 @@ class DatabaseMethods{
         .doc(email).update(userMap);
   }
 
-  getUserByUserEmail2(String userEmail) async{
-    return await FirebaseFirestore.instance.collection("users")
-        .where("email", isEqualTo: userEmail ).get();
-  }
-
   getUserByUserEmail(String userEmail) async{
 
     var document = await FirebaseFirestore.instance.collection("users")
         .doc(userEmail).get();
 
     return document.data();
+  }
+
+  getUsersData() async{
+    return await FirebaseFirestore.instance.collection("users")
+      .snapshots();
   }
 
 }
