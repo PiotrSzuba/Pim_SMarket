@@ -4,6 +4,8 @@ import 'package:pim_smarket/data/data.dart';
 import 'package:pim_smarket/theme.dart';
 import 'package:provider/provider.dart';
 
+import '../services/database.dart';
+
 class AddPage extends StatefulWidget {
   const AddPage({super.key, required this.title});
 
@@ -17,6 +19,8 @@ class _AddPage extends State<AddPage> {
   List<Widget> _tagsWidgets = [];
   List<String> _tagsValues = [];
   final _descriptionController = TextEditingController();
+
+  DatabaseMethods databaseMethods = DatabaseMethods();
 
   void addNewTag() {
     setState(() {
@@ -38,6 +42,7 @@ class _AddPage extends State<AddPage> {
   }
 
   void onSubmit(UserContext userContext) {
+    var description = _descriptionController.text;
     var tagsValue = _tagsValues.where((element) => element.isNotEmpty);
     var tags = tagsValue.join(", ");
     if (tagsValue.length > 1) {
@@ -52,6 +57,15 @@ class _AddPage extends State<AddPage> {
       _tagsValues = [];
       _tagsWidgets = [];
     });
+
+    Map<String,dynamic> offerMap = {
+      'email' : userContext.user.email,
+      'tags' : tags,
+      'description' : description
+    };
+
+    databaseMethods.uploadOffer(offerMap);
+    print(offerMap);
   }
 
   Widget newTextInput() {

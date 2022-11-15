@@ -10,6 +10,14 @@ class DatabaseMethods{
         print(e);
       });
   }
+
+  uploadOffer(offerMap){
+    FirebaseFirestore.instance.collection("offers")
+      .add(offerMap).catchError((e){
+        print(e);
+      });
+  }
+
   updateUserInfo(userMap, email){
     FirebaseFirestore.instance.collection("users")
         .doc(email).update(userMap);
