@@ -33,8 +33,15 @@ class DatabaseMethods{
 
   getUsersData() async{
     return await FirebaseFirestore.instance.collection("users")
-      .snapshots();
+      .where("userType", isEqualTo: 1).snapshots();
   }
+
+  getUsersDataByName(String name) async{
+    return await FirebaseFirestore.instance.collection("users")
+      .where("name", isEqualTo: name).snapshots();
+  }
+
+  
   getOffers() async{
     return await FirebaseFirestore.instance.collection("offers")
       .snapshots();

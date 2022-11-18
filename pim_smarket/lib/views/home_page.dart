@@ -51,14 +51,10 @@ class _HomePage extends State<HomePage> {
             onPressed: () => _searchPopup(context),
             backgroundColor: CustomTheme.pinkColor,
             child: const Icon(Icons.search, color: Colors.black)),
-        child: SingleChildScrollView(
             child: Consumer<UserContext>(
                 builder: (context, userContext, child) =>
-                    SizedBox(
-                      width: 500,
-                      height: 500,
-                      child: usersList(userContext)
-                      ))));
+                      usersList(userContext)
+                      ));
   }
 
   Future<void> _searchPopup(BuildContext context) {
@@ -122,14 +118,6 @@ class _HomePage extends State<HomePage> {
 
   Future<void> _profileDetailsPopup(BuildContext context, Map<String,dynamic> data) {
 
-    void onSearch() {
-      Navigator.of(context).pop();
-      setState(() {
-
-      });
-      print("profiledetails");
-    }
-
     return showDialog(
         context: context,
         builder: (context) => Dialog(
@@ -190,6 +178,8 @@ class _HomePage extends State<HomePage> {
   late final Stream<QuerySnapshot> usersStream;
   late final Stream<QuerySnapshot> offersStream;
 
+  late final Stream<QuerySnapshot> searchByNameStream;
+
   Widget usersList(UserContext userContext){
     if(userContext.user.userType == 0){
       try{
@@ -212,26 +202,7 @@ class _HomePage extends State<HomePage> {
                     String,
                     dynamic>;
 
-                String tags = data["tags"].toString().toLowerCase();
-                String name = data["name"].toString().toLowerCase();;
-
-                if(data["userType"] == 1){
-                  if(searchName != ""){
-                    if(name.contains(searchName.toLowerCase())){
-                      return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)});
-                    }
-                    else{
-                      return const SizedBox();
-                    }
-                  }
-                  else{
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)});
-                  }
-                }
-                else{
-                  return const SizedBox();
-                }
-              
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)});        
           }).toList()
             );
           },
@@ -281,7 +252,9 @@ class _HomePage extends State<HomePage> {
       });
     });
     databaseMethods.getOffers().then((value){
-      offersStream = value;
+      setState(() {
+        offersStream = value;
+      });
     });
   }
 }
