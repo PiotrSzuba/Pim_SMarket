@@ -120,6 +120,72 @@ class _HomePage extends State<HomePage> {
             )));
   }
 
+  Future<void> _profileDetailsPopup(BuildContext context, Map<String,dynamic> data) {
+
+    void onSearch() {
+      Navigator.of(context).pop();
+      setState(() {
+
+      });
+      print("profiledetails");
+    }
+
+    return showDialog(
+        context: context,
+        builder: (context) => Dialog(
+            backgroundColor: Colors.black,
+            child: Container(
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              margin: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: CustomTheme.pinkColor),
+                    borderRadius: CustomTheme.circularBorder,
+                  ),
+                  margin: const EdgeInsets.only(right: 20),
+                  child: ClipRRect(
+                    borderRadius: CustomTheme.circularBorder,
+                    child: SizedBox.fromSize(
+                        size: const Size.square(100),
+                        child: Image.network(
+                              data['image'],
+                          fit: BoxFit.fill,
+                        )),
+                  ),
+                ),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        data['name'],
+                        style: CustomTheme.pinkTitle,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        data['email'],
+                        style: CustomTheme.pinkText,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        data['tags'],
+                        style: CustomTheme.pinkText,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        data['description'],
+                        style: CustomTheme.pinkText,
+                      )),
+                ],
+              ),
+            )));
+  }
+
   DatabaseMethods databaseMethods = DatabaseMethods();
   late final Stream<QuerySnapshot> usersStream;
   late final Stream<QuerySnapshot> offersStream;
@@ -146,18 +212,20 @@ class _HomePage extends State<HomePage> {
                     String,
                     dynamic>;
 
-                String tags = data["tags"];
+                String tags = data["tags"].toString().toLowerCase();
+                String name = data["name"].toString().toLowerCase();;
+
                 if(data["userType"] == 1){
-                  if(searchName != "" || searchTags != ""){
-                    if(data["name"] == searchName || tags.contains(searchTags)){
-                      return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});
+                  if(searchName != ""){
+                    if(name.contains(searchName.toLowerCase())){
+                      return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)});
                     }
                     else{
                       return const SizedBox();
                     }
                   }
                   else{
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)});
                   }
                 }
                 else{
@@ -191,7 +259,7 @@ class _HomePage extends State<HomePage> {
                     String,
                     dynamic>;
 
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{print("Clicked on ${data['name']}")});           
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)});           
           }).toList()
             );
           },

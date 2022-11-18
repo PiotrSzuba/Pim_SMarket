@@ -62,7 +62,8 @@ class _AddPage extends State<AddPage> {
       'name'  : userContext.user.name,
       'email' : userContext.user.email,
       'tags' : tags,
-      'description' : description
+      'description' : description,
+      'image' : userContext.user.image
     };
 
     databaseMethods.uploadOffer(offerMap);
