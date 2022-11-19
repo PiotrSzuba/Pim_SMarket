@@ -202,7 +202,7 @@ class _HomePage extends State<HomePage> {
                     String,
                     dynamic>;
 
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)});        
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],);        
           }).toList()
             );
           },
@@ -230,7 +230,7 @@ class _HomePage extends State<HomePage> {
                     String,
                     dynamic>;
 
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)});           
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image']);           
           }).toList()
             );
           },

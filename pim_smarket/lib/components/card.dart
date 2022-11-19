@@ -7,7 +7,7 @@ class InfoCard extends StatelessWidget {
       required this.name,
       required this.tags,
       required this.onPressed,
-      this.imageUrl});
+      required this.imageUrl});
 
   final String name;
   final String tags;

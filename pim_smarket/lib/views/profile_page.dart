@@ -1,10 +1,17 @@
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pim_smarket/components/components.dart';
 import 'package:pim_smarket/data/data.dart';
 import 'package:pim_smarket/models/models.dart';
 import 'package:pim_smarket/services/database.dart';
 import 'package:pim_smarket/theme.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.title});
@@ -16,10 +23,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
+  File? file;
 
   String editName = '';
   String editDescription = '';
   String editTags = '';
+
+  DatabaseMethods databaseMethods = DatabaseMethods();
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +77,48 @@ class _ProfilePage extends State<ProfilePage> {
     );
   }
 
+  void pickUploadImage(UserContext userContext) async{
+    FilePickerResult? result;
+    try{
+      result =  await FilePicker.platform.pickFiles(allowMultiple: false);
+    }
+    catch(e){
+      print(e);
+    }
+    if(result != null){
+      try{
+        Uint8List? uploadfile = result.files.single.bytes;
+        String fileName = basename(result.files.single.name);
+        
+        Reference storageReference = FirebaseStorage.instance.ref().child("profilePictures/${fileName}");
+        final UploadTask uploadTask = storageReference.putData(uploadfile!);
+        final TaskSnapshot downloadUrl = await uploadTask;
+        final String attchUrl = (await downloadUrl.ref.getDownloadURL());
+        print(attchUrl);
+
+        setState(() {
+          Map<String,dynamic> editedUserMap = {
+            "image": attchUrl,
+          };
+          databaseMethods.updateUserInfo(editedUserMap,userContext.user.email);
+
+          User editedUser = User.mockStudent();
+          databaseMethods.getUserByUserEmail(userContext.user.email)
+          .then((val){
+            editedUser = User.fromJson(val);
+            userContext.changeUser(editedUser);
+        });
+        });
+
+      }
+      catch(e)
+      {
+        print(e);
+      }
+    }
+    
+  }
+
   Future<void> _editProfilePopup(BuildContext context, UserContext userContext) {
     var nameController = TextEditingController();
     var descriptionController = TextEditingController();
@@ -88,7 +140,7 @@ class _ProfilePage extends State<ProfilePage> {
         Map<String,dynamic> editedUserMap = {
           "name" : editName,
           "description" : editDescription,
-          "tags" : editTags
+          "tags" : editTags,
         };
 
         databaseMethods.updateUserInfo(editedUserMap,userContext.user.email);
@@ -113,6 +165,10 @@ class _ProfilePage extends State<ProfilePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Container(
+                      margin: const EdgeInsets.only(top: 15.0),
+                      child:
+                          Button(title: "Pick image", onClicked: () => pickUploadImage(userContext))),
                   Container(
                       margin: const EdgeInsets.symmetric(vertical: 5.0),
                       child: const Text(
