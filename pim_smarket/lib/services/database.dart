@@ -38,7 +38,7 @@ class DatabaseMethods{
 
   getUsersDataByName(String name) async{
     return await FirebaseFirestore.instance.collection("users")
-      .where("name".contains(name)).snapshots();
+      .where("name", isGreaterThanOrEqualTo: name).snapshots();
   }
 
   getUsersDataByTag(String name) async{

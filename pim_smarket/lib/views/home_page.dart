@@ -201,8 +201,17 @@ class _HomePage extends State<HomePage> {
                 Map<String, dynamic> data = document.data()! as Map<
                     String,
                     dynamic>;
-
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],);        
+                if(searchName!="" || searchTags!=""){
+                  if(data["name"].toString().toLowerCase().contains(searchName.toLowerCase()) && searchName!=""){
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],); 
+                  }
+                  else if(data["tags"].toString().toLowerCase().contains(searchTags.toLowerCase()) && searchTags!=""){
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],); 
+                  }
+                  return Container();
+                }
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],);
+                       
           }).toList()
             );
           },
@@ -230,7 +239,17 @@ class _HomePage extends State<HomePage> {
                     String,
                     dynamic>;
 
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image']);           
+                if(searchName!="" || searchTags!=""){
+                  if(data["name"].toString().toLowerCase().contains(searchName.toLowerCase()) && searchName!=""){
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],); 
+                  }
+                  else if(data["tags"].toString().toLowerCase().contains(searchTags.toLowerCase()) && searchTags!=""){
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],); 
+                  }
+                  return Container();
+                }
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],);   
+                       
           }).toList()
             );
           },
