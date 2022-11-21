@@ -36,20 +36,44 @@ class DatabaseMethods{
       .where("userType", isEqualTo: 1).snapshots();
   }
 
-  getUsersDataByName(String name) async{
-    return await FirebaseFirestore.instance.collection("users")
-      .where("name", isGreaterThanOrEqualTo: name).snapshots();
-  }
-
-  getUsersDataByTag(String name) async{
-    return await FirebaseFirestore.instance.collection("users")
-      .where("tags".toLowerCase(), arrayContains: name.toLowerCase()).snapshots();
-  }
-
-  
   getOffers() async{
     return await FirebaseFirestore.instance.collection("offers")
       .snapshots();
+  }
+
+  createChatRoom(String chatroomId, charRoomMap){
+    FirebaseFirestore.instance.collection("chatroom")
+        .doc(chatroomId).set(charRoomMap).catchError((e) {print(e);});
+  }
+
+  updateChatRoom(String chatroomId, chatRoomMap){
+    FirebaseFirestore.instance.collection("chatroom")
+        .doc(chatroomId).update(chatRoomMap).catchError((e) {print(e);});
+  }
+
+  addConversationMessages(String chatRoomId, messageMap){
+    FirebaseFirestore.instance.collection("chatroom")
+        .doc(chatRoomId)
+        .collection("chat")
+        .add(messageMap).catchError((e){print(e);});
+  }
+
+  getConversationMessages(String chatRoomId) async{
+    return await FirebaseFirestore.instance.collection("chatroom")
+        .doc(chatRoomId)
+        .collection("chat")
+        .orderBy("time", descending: true)
+        .snapshots();
+  }
+
+    getChatRoom(String chatRoomID) async{
+    return await FirebaseFirestore.instance.collection("chatroom")
+        .where("chatroomid", isEqualTo: chatRoomID).snapshots();
+  }
+
+    getChatRooms(String userEmail) async{
+    return await FirebaseFirestore.instance.collection("chatroom")
+        .where("users", arrayContains: userEmail).snapshots();
   }
 
 }

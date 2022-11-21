@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -28,6 +29,8 @@ class _ProfilePage extends State<ProfilePage> {
   String editName = '';
   String editDescription = '';
   String editTags = '';
+
+  late final Stream<QuerySnapshot> chatRoomsStream;
 
   DatabaseMethods databaseMethods = DatabaseMethods();
 
@@ -71,7 +74,34 @@ class _ProfilePage extends State<ProfilePage> {
                   textAlign: TextAlign.center,
                   style: CustomTheme.pinkText),
               const SizedBox(height: 20,),
-                  Button(title: "Edit profile", onClicked:() => _editProfilePopup(context, userContext)),
+              Button(title: "Edit profile", onClicked:() => _editProfilePopup(context, userContext)),
+              const SizedBox(height: 20,),
+              Expanded(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance.collection("chatroom").where("users", arrayContains: userContext.user.email).snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+                  if (snapshot.hasError) {
+                    print("not good");
+                    return const Scaffold();
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    print("Waiting for usersStream initialization");
+                    return const Scaffold();
+                  }
+                  print("Initialization compleated");
+                  return ListView(
+                    children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data = document.data()! as Map<
+                      String,
+                      dynamic>;
+                    return InfoCard(name: data['chatroomid'], tags: data['chatroomid'], onPressed: ()=>{print("clicked on ${data["chatroomid"]}")}, imageUrl: data['chatroomid'],);
+                         
+                  }).toList()
+                  );
+                  },
+             ),
+              )
             ],
           )),
     );

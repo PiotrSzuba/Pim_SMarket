@@ -43,6 +43,8 @@ class _HomePage extends State<HomePage> {
   String searchName = '';
   String searchTags = '';
 
+  String messageContent = "";
+
   @override
   Widget build(BuildContext context) {
     print("name: $searchName tags: $searchTags");
@@ -116,7 +118,40 @@ class _HomePage extends State<HomePage> {
             )));
   }
 
-  Future<void> _profileDetailsPopup(BuildContext context, Map<String,dynamic> data) {
+  Future<void> _profileDetailsPopup(BuildContext context, UserContext userContext, Map<String,dynamic> data) {
+
+    var messageController = TextEditingController();
+
+    void onSendMessage(UserContext userContext, Map<String,dynamic> data) {
+
+      String chatRoomID = getChatRoomId(userContext.user.email, data["email"].toString());
+      List<String> users = [userContext.user.email, data["email"]];
+
+      Navigator.of(context).pop();
+      setState(() {
+        messageContent = messageController.text;
+
+        if(databaseMethods.getChatRoom(chatRoomID) != null){
+
+          Map<String,dynamic> chatRoomMap = {
+            "users" : users,
+            "chatroomid" : chatRoomID,
+          };
+
+          databaseMethods.createChatRoom(chatRoomID, chatRoomMap);
+        }
+
+        if(messageController.text.isNotEmpty){
+          Map<String, dynamic> messageMap ={
+            "message" : messageContent,
+            "sendby" : userContext.user.email,
+            "time"  : DateTime.now().millisecondsSinceEpoch
+          };
+
+          databaseMethods.addConversationMessages(chatRoomID, messageMap);
+        }
+      });
+    }
 
     return showDialog(
         context: context,
@@ -169,6 +204,19 @@ class _HomePage extends State<HomePage> {
                         data['description'],
                         style: CustomTheme.pinkText,
                       )),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: TextInput(
+                        label: "Message",
+                        placeholder: "Message",
+                        controller: messageController,
+                      )),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Button(
+                        title: "Send Message",
+                        onClicked: () => onSendMessage(userContext, data),
+                      )),
                 ],
               ),
             )));
@@ -203,14 +251,14 @@ class _HomePage extends State<HomePage> {
                     dynamic>;
                 if(searchName!="" || searchTags!=""){
                   if(data["name"].toString().toLowerCase().contains(searchName.toLowerCase()) && searchName!=""){
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],); 
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],); 
                   }
                   else if(data["tags"].toString().toLowerCase().contains(searchTags.toLowerCase()) && searchTags!=""){
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],); 
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],); 
                   }
                   return Container();
                 }
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],);
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],);
                        
           }).toList()
             );
@@ -241,14 +289,14 @@ class _HomePage extends State<HomePage> {
 
                 if(searchName!="" || searchTags!=""){
                   if(data["name"].toString().toLowerCase().contains(searchName.toLowerCase()) && searchName!=""){
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],); 
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context,userContext, data)}, imageUrl: data['image'],); 
                   }
                   else if(data["tags"].toString().toLowerCase().contains(searchTags.toLowerCase()) && searchTags!=""){
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],); 
+                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],); 
                   }
                   return Container();
                 }
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, data)}, imageUrl: data['image'],);   
+                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],);   
                        
           }).toList()
             );
@@ -275,5 +323,13 @@ class _HomePage extends State<HomePage> {
         offersStream = value;
       });
     });
+  }
+}
+
+getChatRoomId(String a, String b){
+  if(a.substring(0,1).codeUnitAt(0) > b.substring(0,1).codeUnitAt(0)){
+    return "$b\_$a";
+  }else{
+    return "$a\_$b";
   }
 }
