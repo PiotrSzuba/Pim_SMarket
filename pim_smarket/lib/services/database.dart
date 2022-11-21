@@ -58,8 +58,8 @@ class DatabaseMethods{
         .add(messageMap).catchError((e){print(e);});
   }
 
-  getConversationMessages(String chatRoomId) async{
-    return await FirebaseFirestore.instance.collection("chatroom")
+  getConversationMessages(String chatRoomId){
+    return FirebaseFirestore.instance.collection("chatroom")
         .doc(chatRoomId)
         .collection("chat")
         .orderBy("time", descending: true)

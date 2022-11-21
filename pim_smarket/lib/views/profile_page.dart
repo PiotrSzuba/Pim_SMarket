@@ -95,7 +95,18 @@ class _ProfilePage extends State<ProfilePage> {
                     Map<String, dynamic> data = document.data()! as Map<
                       String,
                       dynamic>;
-                    return InfoCard(name: data['chatroomid'], tags: data['chatroomid'], onPressed: ()=>{print("clicked on ${data["chatroomid"]}")}, imageUrl: data['chatroomid'],);
+
+                    String conversationName = data["usernames"][0];
+                    if(data["usernames"][0] == userContext.user.name){
+                      conversationName = data["usernames"][1];
+                    }
+                    String conversationImage = data["usersImages"][0];
+                    if(data["usersImages"][0] == userContext.user.image){
+                      conversationImage = data["usersImages"][1];
+                    }
+                    
+
+                    return InfoCard(name: conversationName, tags: "", onPressed: ()=>_chatPopup(context, userContext, data["chatroomid"].toString()), imageUrl: conversationImage,);
                          
                   }).toList()
                   );
@@ -105,6 +116,98 @@ class _ProfilePage extends State<ProfilePage> {
             ],
           )),
     );
+  }
+
+  Future<void> _chatPopup(BuildContext context, UserContext userContext, String chatRoomID) {
+
+    var messageController = TextEditingController();
+    String messageContent = "";
+
+    void onSendMessage(UserContext userContext) {
+      
+      setState(() {
+        messageContent = messageController.text;
+
+        if(messageController.text.isNotEmpty){
+          Map<String, dynamic> messageMap ={
+            "message" : messageContent,
+            "sendby" : userContext.user.email,
+            "time"  : DateTime.now().millisecondsSinceEpoch
+          };
+
+          databaseMethods.addConversationMessages(chatRoomID, messageMap);
+        }
+        messageController.text = "";
+      });
+    }
+
+    return showDialog(
+        context: context,
+        builder: (context) => Dialog(
+            backgroundColor: Colors.black,
+            child: Container(
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              margin: const EdgeInsets.all(20),
+              child: Stack(
+                children: [
+                  StreamBuilder(
+                      stream: databaseMethods.getConversationMessages(chatRoomID),
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+                      if (snapshot.hasError) {
+                        print("not good");
+                        return const Scaffold();
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        print("Waiting for messages Stream initialization");
+                        return const Scaffold();
+                      }
+                      print("Initialization compleated");
+                      return ListView(
+                        children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data = document.data()! as Map<
+                          String,
+                          dynamic>;
+
+                        return Container(
+                          alignment: data["sendby"].toString() == userContext.user.email ? Alignment.centerRight : Alignment.centerLeft,
+                          child: Text(data["message"],style: CustomTheme.pinkText,
+                          ));
+                             
+                      }).toList()
+                      );
+                      },
+                    ),
+                    Container(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: TextField(
+                          controller: messageController,
+                          decoration: const InputDecoration(
+                            hintText: "Message...",
+                            hintStyle: CustomTheme.pinkText50
+                          ),
+                          style: CustomTheme.pinkText,
+                        )
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          onSendMessage(userContext);
+                        },
+                        child: const Icon(Icons.send, color: CustomTheme.pinkColor)
+                    ),
+                  ],
+                ),
+              ),
+            ),
+                ],
+              )
+            )));
   }
 
   void pickUploadImage(UserContext userContext) async{

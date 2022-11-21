@@ -126,6 +126,9 @@ class _HomePage extends State<HomePage> {
 
       String chatRoomID = getChatRoomId(userContext.user.email, data["email"].toString());
       List<String> users = [userContext.user.email, data["email"]];
+      List<String> userNames = [userContext.user.name, data["name"]];
+      List<String> userImages = [userContext.user.image, data["image"]];
+      
 
       Navigator.of(context).pop();
       setState(() {
@@ -136,6 +139,8 @@ class _HomePage extends State<HomePage> {
           Map<String,dynamic> chatRoomMap = {
             "users" : users,
             "chatroomid" : chatRoomID,
+            "usernames" : userNames,
+            "usersImages" : userImages
           };
 
           databaseMethods.createChatRoom(chatRoomID, chatRoomMap);
