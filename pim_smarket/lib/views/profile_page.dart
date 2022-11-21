@@ -40,6 +40,7 @@ class _ProfilePage extends State<ProfilePage> {
       child: Consumer<UserContext>(
           builder: (context, userContext, child) => Column(
             children: [
+              const SizedBox(height: 20,),
               Row(
                 children: [
                   Container(
@@ -58,16 +59,33 @@ class _ProfilePage extends State<ProfilePage> {
                         )),
                   ),
                 ),
-                  Text(
-                      "${widget.title} of ${userContext.user.name}",
-                      textAlign: TextAlign.center,
-                      style: CustomTheme.pinkTitle),
+                  Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                            "${widget.title} of ${userContext.user.name}",
+                            textAlign: TextAlign.right,
+                            style: CustomTheme.pinkTitle),
+                      ),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          userContext.user.email,
+                          textAlign: TextAlign.left,
+                          style: CustomTheme.pinkText),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              Text(
-                  userContext.user.email,
-                  textAlign: TextAlign.center,
-                  style: CustomTheme.pinkText),
+              Container(
+                alignment: Alignment.centerRight,
+                  child: Text(
+                    userContext.user.tags,
+                    textAlign: TextAlign.right,
+                    style: CustomTheme.pinkTitle),
+              ),
               const SizedBox(height: 20,),
               Text(
                   userContext.user.description,
