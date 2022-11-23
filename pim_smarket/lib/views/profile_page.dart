@@ -64,7 +64,7 @@ class _ProfilePage extends State<ProfilePage> {
                       Container(
                         alignment: Alignment.centerRight,
                         child: Text(
-                            "${widget.title} of ${userContext.user.name}",
+                            userContext.user.name,
                             textAlign: TextAlign.right,
                             style: CustomTheme.pinkTitle),
                       ),
