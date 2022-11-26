@@ -114,10 +114,8 @@ class _ProfilePage extends State<ProfilePage> {
                       String,
                       dynamic>;
 
-                    String conversationName = data["usernames"][0];
-                    if(data["usernames"][0] == userContext.user.name){
-                      conversationName = data["usernames"][1];
-                    }
+                    String conversationName = data["usernames"][0] + " - " + data["usernames"][1];
+
                     String conversationImage = data["usersImages"][0];
                     if(data["usersImages"][0] == userContext.user.image){
                       conversationImage = data["usersImages"][1];
@@ -231,7 +229,7 @@ class _ProfilePage extends State<ProfilePage> {
   void pickUploadImage(UserContext userContext) async{
     FilePickerResult? result;
     try{
-      result =  await FilePicker.platform.pickFiles(allowMultiple: false);
+      result =  await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.image, withData: true);
     }
     catch(e){
       print(e);
