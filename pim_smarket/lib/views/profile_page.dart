@@ -315,64 +315,66 @@ class _ProfilePage extends State<ProfilePage> {
 
     return showDialog(
         context: context,
-        builder: (context) => Dialog(
-            backgroundColor: Colors.black,
-            child: Container(
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              margin: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                      margin: const EdgeInsets.only(top: 15.0),
-                      child:
-                          Button(title: "Pick image", onClicked: () => pickUploadImage(userContext))),
-                  Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: const Text(
-                        "Edit name",
-                        style: CustomTheme.pinkTitle,
-                      )),
-                  Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: TextInput(
-                        label: "Name",
-                        placeholder: "Name",
-                        controller: nameController,
-                      )),
-                  Container(
-                      margin: const EdgeInsets.only(bottom: 5.0, top: 15),
-                      child: const Text(
-                        "Edit description",
-                        style: CustomTheme.pinkTitle,
-                      )),
-                  Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: TextInput(
-                        label: "Description",
-                        placeholder: "Description",
-                        controller: descriptionController,
-                      )),
-                      Container(
-                      margin: const EdgeInsets.only(bottom: 5.0, top: 15),
-                      child: const Text(
-                        "Edit tags",
-                        style: CustomTheme.pinkTitle,
-                      )),
-                  Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: TextInput(
-                        label: "Tags",
-                        placeholder: "Tags",
-                        controller: tagsController,
-                      )),
-                  Container(
-                      margin: const EdgeInsets.only(top: 15.0),
-                      child:
-                          Button(title: "Save", onClicked: () => onEdit())),
-                ],
-              ),
-            )));
+        builder: (context) => SingleChildScrollView(
+          child: Dialog(
+              backgroundColor: Colors.black,
+              child: Container(
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                margin: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.only(top: 15.0),
+                        child:
+                            Button(title: "Pick image", onClicked: () => pickUploadImage(userContext))),
+                    Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: const Text(
+                          "Edit name",
+                          style: CustomTheme.pinkTitle,
+                        )),
+                    Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: TextInput(
+                          label: "Name",
+                          placeholder: "Name",
+                          controller: nameController,
+                        )),
+                    Container(
+                        margin: const EdgeInsets.only(bottom: 5.0, top: 15),
+                        child: const Text(
+                          "Edit description",
+                          style: CustomTheme.pinkTitle,
+                        )),
+                    Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: TextInput(
+                          label: "Description",
+                          placeholder: "Description",
+                          controller: descriptionController,
+                        )),
+                        Container(
+                        margin: const EdgeInsets.only(bottom: 5.0, top: 15),
+                        child: const Text(
+                          "Edit tags",
+                          style: CustomTheme.pinkTitle,
+                        )),
+                    Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: TextInput(
+                          label: "Tags",
+                          placeholder: "Tags",
+                          controller: tagsController,
+                        )),
+                    Container(
+                        margin: const EdgeInsets.only(top: 15.0),
+                        child:
+                            Button(title: "Save", onClicked: () => onEdit())),
+                  ],
+                ),
+              )),
+        ));
   }
 }
