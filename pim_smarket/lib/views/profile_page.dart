@@ -114,7 +114,10 @@ class _ProfilePage extends State<ProfilePage> {
                       String,
                       dynamic>;
 
-                    String conversationName = data["usernames"][0] + " - " + data["usernames"][1];
+                    String conversationName = data["usernames"][0];
+                    if(data["usersImages"][0] == userContext.user.image){
+                      conversationName = data["usernames"][1];
+                    }
 
                     String conversationImage = data["usersImages"][0];
                     if(data["usersImages"][0] == userContext.user.image){
@@ -292,7 +295,14 @@ class _ProfilePage extends State<ProfilePage> {
           "tags" : editTags,
         };
 
+        if(userContext.user.userType == 0){
+          databaseMethods.updateMyOffers(userContext.user.email, userContext.user.image, editName);
+          print(userContext.user.email + userContext.user.image + editName);
+        }
+
         databaseMethods.updateUserInfo(editedUserMap,userContext.user.email);
+
+        databaseMethods.updateMyChatRooms(userContext.user.email, editName, userContext.user.image);
 
         User editedUser = User.mockStudent();
         databaseMethods.getUserByUserEmail(userContext.user.email)

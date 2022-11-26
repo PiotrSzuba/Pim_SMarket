@@ -15,6 +15,19 @@ class DatabaseMethods{
         print(e);
       });
   }
+    updateMyOffers(String userEmail, image, name){
+    dynamic querySnapshots = FirebaseFirestore.instance.collection("offers")
+        .where("email", isEqualTo: userEmail).get()
+        .then((value){
+          value.docs.forEach((element) {
+              element.reference.update({
+                "image": image,
+                "name": name
+              });
+              print(element.data()["email"]);
+           });
+        });
+  }
 
   updateUserInfo(userMap, email){
     FirebaseFirestore.instance.collection("users")
@@ -47,6 +60,30 @@ class DatabaseMethods{
   updateChatRoom(String chatroomId, chatRoomMap){
     FirebaseFirestore.instance.collection("chatroom")
         .doc(chatroomId).update(chatRoomMap).catchError((e) {print(e);});
+  }
+
+  updateMyChatRooms(String userEmail, username, image){
+    dynamic querySnapshots = FirebaseFirestore.instance.collection("chatroom")
+        .where("users", arrayContains: userEmail).get()
+        .then((value){
+          value.docs.forEach((element) {
+            dynamic usernames = [element.data()["usernames"][0],element.data()["usernames"][1]];
+            dynamic images = [element.data()["usersImages"][0],element.data()["usersImages"][1]];
+            if(element.data()["users"][0] == userEmail){
+               usernames = [username,element.data()["usernames"][1]];
+               images = [image,element.data()["usersImages"][1]];
+            }
+            else{
+              usernames = [element.data()["usernames"][0],username];
+              images = [element.data()["usersImages"][0],image];
+            }
+
+              element.reference.update({
+                "usernames": usernames,
+                "usersImages": images
+              });
+           });
+        });
   }
 
   addConversationMessages(String chatRoomId, messageMap){
