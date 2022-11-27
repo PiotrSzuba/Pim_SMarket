@@ -118,7 +118,7 @@ class _ProfilePage extends State<ProfilePage> {
                           print("Waiting for usersStream initialization");
                           return const Scaffold();
                         }
-                        print("Initialization compleated");
+                        print("Initialization completed");
                         return ListView(
                             children: snapshot.data!.docs
                                 .map((DocumentSnapshot document) {
