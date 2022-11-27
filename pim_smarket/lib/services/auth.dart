@@ -29,13 +29,17 @@ class AuthMethods {
       User? firebaseUser = result.user;
 
       return _userFromFirebaseUser(firebaseUser!);
-    } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+    } catch (e) {
       if (e is PlatformException) {
         if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+          return e.code;
+        } else {
           return null;
         }
+      } else if (e is FirebaseAuthException) {
+        return e.code;
+      } else {
+        return null;
       }
     }
   }

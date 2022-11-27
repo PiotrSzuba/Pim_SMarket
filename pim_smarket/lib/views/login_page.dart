@@ -127,7 +127,22 @@ class _LoginPage extends State<LoginPage> {
       var user = User(_email, _name, _password, _userType, "", "", "", false);
 
       authMethods.signUpWithEmailAndPassword(_email, _password).then((value) {
-        if (value != null) {
+        if (value == 'ERROR_EMAIL_ALREADY_IN_USE') {
+          setState(() {
+            _emailError = true;
+            _emailErrorMessage = "Email already in use !";
+          });
+        } else if (value == 'invalid-email') {
+          setState(() {
+            _emailError = true;
+            _emailErrorMessage = "Invalid email !";
+          });
+        } else if (value == null) {
+          setState(() {
+            _emailError = true;
+            _emailErrorMessage = "Unknown error !";
+          });
+        } else {
           databaseMethods.uploadUserInfo(user.toJson(), _email);
           onChangeMode();
         }
