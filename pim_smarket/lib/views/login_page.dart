@@ -59,6 +59,11 @@ class _LoginPage extends State<LoginPage> {
       _passwordErrorMessage = "Password cannot be empty !";
       return;
     }
+    if (password.length < 8 && !_isSigningIn) {
+      _passwordError = true;
+      _passwordErrorMessage = "Password has to have at least 8 characters !";
+      return;
+    }
     _passwordError = false;
     _passwordErrorMessage = "";
   }
@@ -79,31 +84,32 @@ class _LoginPage extends State<LoginPage> {
       validateEmail(_email);
     });
 
-//    if (_password != "1234") return;
-//    if (_email == "student") {
-//      userContext.changeUser(User.mockStudent());
-//      return;
-//    }
-//    if (_email == "company") {
-//      userContext.changeUser(User.mockCompany());
-//      return;
-//    }
+    if (_passwordError) return;
+    if (_emailError) return;
 
-    User user = User.mockStudent();
-    databaseMethods.getUserByUserEmail(_email)
-      .then((val){
-        user = User.fromJson(val);
-      });
-
-    authMethods.signInWithEmailAndPassword(_email, _password)
-    .then((value){
-      if(value != null){
-        userContext.changeUser(user);
-        print(user.email);
+    var user = User.empty();
+    databaseMethods.getUserByUserEmail(_email).then((value) {
+      if (value == null) {
+        setState(() {
+          _emailError = true;
+          _emailErrorMessage = "Could not sign in check your email !";
+        });
         return;
       }
-    });
+      user = User.fromJson(value);
+      if (user.email == '') return;
 
+      authMethods.signInWithEmailAndPassword(_email, _password).then((value) {
+        if (value == null) {
+          setState(() {
+            _passwordError = true;
+            _passwordErrorMessage = "Could not sign in check your password!";
+          });
+        } else {
+          userContext.changeUser(user);
+        }
+      });
+    });
   }
 
   void onSignUp(UserContext userContext) {
@@ -113,15 +119,19 @@ class _LoginPage extends State<LoginPage> {
       validatePassword(_password);
       validateName(_name);
 
-      User user = User(_email, _name, _password, _userType, "", "", "", false);
+      if (_emailError) return;
+      if (_passwordError) return;
+      if (_nameError) return;
+      if (_userTypeError) return;
 
-      authMethods.signUpWithEmailAndPassword(_email, _password)
-      .then((value){
-        if(value != null){
-          databaseMethods.uploadUserInfo(user.toJson(),_email);
+      var user = User(_email, _name, _password, _userType, "", "", "", false);
+
+      authMethods.signUpWithEmailAndPassword(_email, _password).then((value) {
+        if (value != null) {
+          databaseMethods.uploadUserInfo(user.toJson(), _email);
+          onChangeMode();
         }
       });
-
     });
     print("$_email $_name $_password");
   }
@@ -160,7 +170,8 @@ class _LoginPage extends State<LoginPage> {
     });
   }
 
-  void onChangeAccountType(int? userType) { //usertype changed to int
+  void onChangeAccountType(int? userType) {
+    //userType changed to int
     if (userType == null) return;
     setState(() {
       _userTypeError = false;
@@ -230,7 +241,8 @@ class _LoginPage extends State<LoginPage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(children: [
-                                          Radio<int>( //usertype changed to int
+                                          Radio<int>(
+                                              //usertype changed to int
                                               activeColor:
                                                   CustomTheme.pinkColor,
                                               value: 1,
@@ -243,7 +255,8 @@ class _LoginPage extends State<LoginPage> {
                                                   : CustomTheme.pinkText)
                                         ]),
                                         Row(children: [
-                                          Radio<int>( //usertype changed to int
+                                          Radio<int>(
+                                              //usertype changed to int
                                               activeColor:
                                                   CustomTheme.pinkColor,
                                               value: 0,
