@@ -16,28 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
-  List<Widget> students = List<Widget>.generate(
-      20,
-      (index) => InfoCard(
-            name: "student ${index + 1}",
-            tags: "C C++ C# F# Java Python Lisp Javascript Typescript Dart",
-            imageUrl: 'https://media.tenor.com/m8oi5KsmOZ0AAAAS/loli.gif',
-            onPressed: () => print("student ${index + 1} clicked"),
-          ));
-
-  List<Widget> companies = List<Widget>.generate(
-      20,
-      (index) => InfoCard(
-            name: "company ${index + 1}",
-            tags: "Greedy, low pay, fruity fridays, paid coffee",
-            imageUrl: 'https://media.tenor.com/m8oi5KsmOZ0AAAAS/loli.gif',
-            onPressed: () => print("Company ${index + 1} clicked"),
-          ));
-
-  List<Widget> _getItems(UserContext userContext) {
-    return userContext.isStudent() ? companies : students;
-  }
-
   String searchName = '';
   String searchTags = '';
 
@@ -51,10 +29,8 @@ class _HomePage extends State<HomePage> {
             onPressed: () => _searchPopup(context),
             backgroundColor: CustomTheme.pinkColor,
             child: const Icon(Icons.search, color: Colors.black)),
-            child: Consumer<UserContext>(
-                builder: (context, userContext, child) =>
-                      usersList(userContext)
-                      ));
+        child: Consumer<UserContext>(
+            builder: (context, userContext, child) => usersList(userContext)));
   }
 
   Future<void> _searchPopup(BuildContext context) {
@@ -116,39 +92,37 @@ class _HomePage extends State<HomePage> {
             )));
   }
 
-  Future<void> _profileDetailsPopup(BuildContext context, UserContext userContext, Map<String,dynamic> data) {
-
+  Future<void> _profileDetailsPopup(BuildContext context,
+      UserContext userContext, Map<String, dynamic> data) {
     var messageController = TextEditingController();
 
-    void onSendMessage(UserContext userContext, Map<String,dynamic> data) {
-
-      String chatRoomID = getChatRoomId(userContext.user.email, data["email"].toString());
+    void onSendMessage(UserContext userContext, Map<String, dynamic> data) {
+      String chatRoomID =
+          getChatRoomId(userContext.user.email, data["email"].toString());
       List<String> users = [userContext.user.email, data["email"]];
       List<String> userNames = [userContext.user.name, data["name"]];
       List<String> userImages = [userContext.user.image, data["image"]];
-      
 
       Navigator.of(context).pop();
       setState(() {
         messageContent = messageController.text;
 
-        if(databaseMethods.getChatRoom(chatRoomID) != null){
-
-          Map<String,dynamic> chatRoomMap = {
-            "users" : users,
-            "chatroomid" : chatRoomID,
-            "usernames" : userNames,
-            "usersImages" : userImages
+        if (databaseMethods.getChatRoom(chatRoomID) != null) {
+          Map<String, dynamic> chatRoomMap = {
+            "users": users,
+            "chatroomid": chatRoomID,
+            "usernames": userNames,
+            "usersImages": userImages
           };
 
           databaseMethods.createChatRoom(chatRoomID, chatRoomMap);
         }
 
-        if(messageController.text.isNotEmpty){
-          Map<String, dynamic> messageMap ={
-            "message" : messageContent,
-            "sendby" : userContext.user.email,
-            "time"  : DateTime.now().millisecondsSinceEpoch
+        if (messageController.text.isNotEmpty) {
+          Map<String, dynamic> messageMap = {
+            "message": messageContent,
+            "sendby": userContext.user.email,
+            "time": DateTime.now().millisecondsSinceEpoch
           };
 
           databaseMethods.addConversationMessages(chatRoomID, messageMap);
@@ -168,21 +142,21 @@ class _HomePage extends State<HomePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: CustomTheme.pinkColor),
-                    borderRadius: CustomTheme.circularBorder,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: CustomTheme.pinkColor),
+                      borderRadius: CustomTheme.circularBorder,
+                    ),
+                    margin: const EdgeInsets.only(right: 20),
+                    child: ClipRRect(
+                      borderRadius: CustomTheme.circularBorder,
+                      child: SizedBox.fromSize(
+                          size: const Size.square(100),
+                          child: Image.network(
+                            data['image'],
+                            fit: BoxFit.fill,
+                          )),
+                    ),
                   ),
-                  margin: const EdgeInsets.only(right: 20),
-                  child: ClipRRect(
-                    borderRadius: CustomTheme.circularBorder,
-                    child: SizedBox.fromSize(
-                        size: const Size.square(100),
-                        child: Image.network(
-                              data['image'],
-                          fit: BoxFit.fill,
-                        )),
-                  ),
-                ),
                   Container(
                       margin: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Text(
@@ -231,97 +205,154 @@ class _HomePage extends State<HomePage> {
 
   late final Stream<QuerySnapshot> searchByNameStream;
 
-  Widget usersList(UserContext userContext){
-    if(userContext.user.userType == 0){
-      try{
+  Widget usersList(UserContext userContext) {
+    if (userContext.user.userType == 0) {
+      try {
         return StreamBuilder(
           stream: usersStream,
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               print("not good");
               return const Scaffold();
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-             print("Waiting for usersStream initialization");
+              print("Waiting for usersStream initialization");
               return const Scaffold();
             }
             print("Initialization compleated");
             return ListView(
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                Map<String, dynamic> data = document.data()! as Map<
-                    String,
-                    dynamic>;
-                if(searchName!="" || searchTags!=""){
-                  if(data["name"].toString().toLowerCase().contains(searchName.toLowerCase()) && searchName!=""){
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],); 
-                  }
-                  else if(data["tags"].toString().toLowerCase().contains(searchTags.toLowerCase()) && searchTags!=""){
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],); 
-                  }
-                  return Container();
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data =
+                  document.data()! as Map<String, dynamic>;
+              if (searchName != "" || searchTags != "") {
+                if (data["name"]
+                        .toString()
+                        .toLowerCase()
+                        .contains(searchName.toLowerCase()) &&
+                    searchName != "") {
+                  return InfoCard(
+                    name: data['name'],
+                    tags: data['tags'],
+                    onPressed: () =>
+                        {_profileDetailsPopup(context, userContext, data)},
+                    imageUrl: data['image'],
+                  );
+                } else if (data["tags"]
+                        .toString()
+                        .toLowerCase()
+                        .contains(searchTags.toLowerCase()) &&
+                    searchTags != "") {
+                  return InfoCard(
+                    name: data['name'],
+                    tags: data['tags'],
+                    onPressed: () =>
+                        {_profileDetailsPopup(context, userContext, data)},
+                    imageUrl: data['image'],
+                  );
                 }
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],);
-                       
-          }).toList()
-            );
+                return Container();
+              }
+              return InfoCard(
+                name: data['name'],
+                tags: data['tags'],
+                onPressed: () =>
+                    {_profileDetailsPopup(context, userContext, data)},
+                imageUrl: data['image'],
+              );
+            }).toList());
           },
         );
-      }catch(e){print(e);return const Scaffold(body: Text("Sheep's not Gucci",style: TextStyle(color: Colors.white)),);}
-    }
-    else{
-      try{
+      } catch (e) {
+        print(e);
+        return const Scaffold(
+          body:
+              Text("Sheep's not Gucci", style: TextStyle(color: Colors.white)),
+        );
+      }
+    } else {
+      try {
         return StreamBuilder(
           stream: offersStream,
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               print("not good");
               return const Scaffold();
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-             print("Waiting for offersStream initialization");
+              print("Waiting for offersStream initialization");
               return const Scaffold();
             }
             print("Initialization compleated");
             return ListView(
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                Map<String, dynamic> data = document.data()! as Map<
-                    String,
-                    dynamic>;
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data =
+                  document.data()! as Map<String, dynamic>;
 
-                if(searchName!="" || searchTags!=""){
-                  if(data["name"].toString().toLowerCase().contains(searchName.toLowerCase()) && searchName!=""){
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context,userContext, data)}, imageUrl: data['image'],); 
-                  }
-                  else if(data["tags"].toString().toLowerCase().contains(searchTags.toLowerCase()) && searchTags!=""){
-                    return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],); 
-                  }
-                  return Container();
+              if (searchName != "" || searchTags != "") {
+                if (data["name"]
+                        .toString()
+                        .toLowerCase()
+                        .contains(searchName.toLowerCase()) &&
+                    searchName != "") {
+                  return InfoCard(
+                    name: data['name'],
+                    tags: data['tags'],
+                    onPressed: () =>
+                        {_profileDetailsPopup(context, userContext, data)},
+                    imageUrl: data['image'],
+                  );
+                } else if (data["tags"]
+                        .toString()
+                        .toLowerCase()
+                        .contains(searchTags.toLowerCase()) &&
+                    searchTags != "") {
+                  return InfoCard(
+                    name: data['name'],
+                    tags: data['tags'],
+                    onPressed: () =>
+                        {_profileDetailsPopup(context, userContext, data)},
+                    imageUrl: data['image'],
+                  );
                 }
-                return InfoCard(name: data['name'], tags: data['tags'], onPressed: ()=>{_profileDetailsPopup(context, userContext, data)}, imageUrl: data['image'],);   
-                       
-          }).toList()
-            );
+                return Container();
+              }
+              return InfoCard(
+                name: data['name'],
+                tags: data['tags'],
+                onPressed: () =>
+                    {_profileDetailsPopup(context, userContext, data)},
+                imageUrl: data['image'],
+              );
+            }).toList());
           },
         );
-      }catch(e){print(e);return const Scaffold(body: Text("Sheep's not Gucci",style: TextStyle(color: Colors.white),),);}
+      } catch (e) {
+        print(e);
+        return const Scaffold(
+          body: Text(
+            "Sheep's not Gucci",
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+      }
     }
   }
 
   @override
-  void initState(){
+  void initState() {
     getData();
     super.initState();
   }
 
-  getData() async{
-    databaseMethods.getUsersData().then((value){
+  getData() async {
+    databaseMethods.getUsersData().then((value) {
       setState(() {
         usersStream = value;
       });
     });
-    databaseMethods.getOffers().then((value){
+    databaseMethods.getOffers().then((value) {
       setState(() {
         offersStream = value;
       });
@@ -329,10 +360,10 @@ class _HomePage extends State<HomePage> {
   }
 }
 
-getChatRoomId(String a, String b){
-  if(a.substring(0,1).codeUnitAt(0) > b.substring(0,1).codeUnitAt(0)){
+getChatRoomId(String a, String b) {
+  if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
     return "$b\_$a";
-  }else{
+  } else {
     return "$a\_$b";
   }
 }

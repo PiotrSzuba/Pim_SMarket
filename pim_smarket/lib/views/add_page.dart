@@ -58,12 +58,12 @@ class _AddPage extends State<AddPage> {
       _tagsWidgets = [];
     });
 
-    Map<String,dynamic> offerMap = {
-      'name'  : userContext.user.name,
-      'email' : userContext.user.email,
-      'tags' : tags,
-      'description' : description,
-      'image' : userContext.user.image
+    Map<String, dynamic> offerMap = {
+      'name': userContext.user.name,
+      'email': userContext.user.email,
+      'tags': tags,
+      'description': description,
+      'image': userContext.user.image
     };
 
     databaseMethods.uploadOffer(offerMap);
@@ -97,12 +97,15 @@ class _AddPage extends State<AddPage> {
                             margin: const EdgeInsets.symmetric(vertical: 5.0),
                             child:
                                 Button(title: "New tag", onClicked: addNewTag)),
-                        Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: Button(
-                              title: "Delete tag",
-                              onClicked: onDeleteTag,
-                            )),
+                        _tagsValues.isEmpty
+                            ? Container()
+                            : Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                child: Button(
+                                  title: "Delete tag",
+                                  onClicked: onDeleteTag,
+                                )),
                         Container(
                           margin:
                               const EdgeInsets.only(bottom: 10.0, top: 25.0),

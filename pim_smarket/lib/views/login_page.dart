@@ -127,7 +127,7 @@ class _LoginPage extends State<LoginPage> {
       var user = User(_email, _name, _password, _userType, "", "", "", false);
 
       authMethods.signUpWithEmailAndPassword(_email, _password).then((value) {
-        if (value == 'ERROR_EMAIL_ALREADY_IN_USE') {
+        if (value == 'email-already-in-use') {
           setState(() {
             _emailError = true;
             _emailErrorMessage = "Email already in use !";
