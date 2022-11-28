@@ -212,9 +212,36 @@ class _ProfilePage extends State<ProfilePage> {
                                       userContext.user.email
                                   ? Alignment.centerRight
                                   : Alignment.centerLeft,
-                              child: Text(
-                                data["message"],
-                                style: CustomTheme.pinkText,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                  colors: data["sendby"].toString() ==
+                                      userContext.user.email ?[
+                                    CustomTheme.pinkColor,
+                                    CustomTheme.pinkColor50
+                                  ]
+                                  : [
+                                    CustomTheme.pinkColor50,
+                                    CustomTheme.pinkColor
+                                  ]
+                                  ),
+                                  borderRadius: data["sendby"].toString() ==
+                                      userContext.user.email ? 
+                                    const BorderRadius.only(
+                                        topLeft: Radius.circular(25),
+                                        topRight: Radius.circular(25),
+                                        bottomLeft: Radius.circular(25)
+                                      ) : const BorderRadius.only(
+                                        topLeft: Radius.circular(25),
+                                        topRight: Radius.circular(25),
+                                        bottomRight: Radius.circular(25)
+                                        )
+                                      ),
+                                child: Text(
+                                  data["message"],
+                                  style: CustomTheme.blackText,
+                                ),
                               ));
                         }).toList());
                       },
