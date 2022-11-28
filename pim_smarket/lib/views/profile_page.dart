@@ -208,12 +208,13 @@ class _ProfilePage extends State<ProfilePage> {
                               document.data()! as Map<String, dynamic>;
 
                           return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               alignment: data["sendby"].toString() ==
                                       userContext.user.email
                                   ? Alignment.centerRight
                                   : Alignment.centerLeft,
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                   colors: data["sendby"].toString() ==
