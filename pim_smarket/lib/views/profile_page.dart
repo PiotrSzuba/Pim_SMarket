@@ -223,8 +223,8 @@ class _ProfilePage extends State<ProfilePage> {
                                     CustomTheme.pinkColor50
                                   ]
                                   : [
-                                    CustomTheme.pinkColor50,
-                                    CustomTheme.pinkColor
+                                    CustomTheme.grayColor,
+                                    CustomTheme.grayColor
                                   ]
                                   ),
                                   borderRadius: data["sendby"].toString() ==
@@ -241,7 +241,7 @@ class _ProfilePage extends State<ProfilePage> {
                                       ),
                                 child: Text(
                                   data["message"],
-                                  style: CustomTheme.blackText,
+                                  style: CustomTheme.whiteText,
                                 ),
                               ));
                         }).toList());

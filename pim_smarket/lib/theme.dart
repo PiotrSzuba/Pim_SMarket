@@ -6,6 +6,8 @@ class CustomTheme {
   static const int _red = 171;
   static const int _green = 65;
   static const int _blue = 241;
+  static const Color grayColor = Color(0xff373332);
+  static const Color whiteColor = Color(0xffEDD4F6);
   static const Color pinkColor = Color.fromARGB(255, _red, _green, _blue);
   static const Color pinkColor50 = Color.fromARGB(125, _red, _green, _blue);
   static const double bodyMarginX = 0.05;
@@ -19,6 +21,7 @@ class CustomTheme {
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: _titleFontSize);
+  static const TextStyle whiteText = TextStyle(color: whiteColor);
   static const TextStyle pinkText = TextStyle(color: pinkColor);
   static const TextStyle pinkText50 = TextStyle(color: pinkColor50);
   static const TextStyle pinkTitle = TextStyle(
